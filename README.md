@@ -1,1 +1,2 @@
-# airesidency
+# AI Residency
+
