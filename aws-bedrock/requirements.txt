@@ -1,0 +1,4 @@
+boto3
+awscli
+langchain
+langchain_community
