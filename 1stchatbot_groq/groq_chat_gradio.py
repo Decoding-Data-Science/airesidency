@@ -2,6 +2,7 @@
 #pip install groq
 #pip install python-dotenv
 #pip install gradio
+#add .env with GROQ api key in local
 # use 3.11 python
 
 import os
