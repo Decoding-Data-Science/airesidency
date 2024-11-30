@@ -1,6 +1,7 @@
 #pip install requests
 #pip install groq
 #pip install python-dotenv
+#pip install gradio
 # use 3.11 python
 
 import os
