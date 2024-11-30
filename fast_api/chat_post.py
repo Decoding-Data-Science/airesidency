@@ -1,3 +1,12 @@
+#step 1
+#pip install fastapi 
+#pip install  uvicorn
+#pip install huggingface_hub
+
+#step 2 
+#run in terminal uvicorn main:app --reload 
+
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from huggingface_hub import InferenceClient
