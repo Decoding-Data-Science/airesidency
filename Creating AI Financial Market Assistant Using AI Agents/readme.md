@@ -37,18 +37,13 @@ cd agno-financial-assistant
 Create a .env file in the root directory with the following:
 
 env
-Copy
-Edit
+
 OPENAI_API_KEY=your_openai_key_here
 3. Install Dependencies
-bash
-Copy
-Edit
+
 pip install -r requirements.txt
 4. Run the App
-bash
-Copy
-Edit
+
 python app.py
 This will launch a Gradio web interface where you can chat with the AI assistant.
 
