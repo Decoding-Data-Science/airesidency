@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python for AI Residency — Learning Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#070b14;
+    --panel:#0d1424;
+    --panel2:#101a2e;
+    --panel3:#16233b;
+    --line:#1c2b45;
+    --cyan:#22d3ee;
+    --violet:#8b5cf6;
+    --amber:#f5a623;
+    --green:#34d399;
+    --white:#ffffff;
+    --muted:#8b99b0;
+    --muted2:#5c6b85;
+    --red:#f87171;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; padding:0; width:100%; height:100%;
+    background:var(--bg);
+    font-family:'Inter',sans-serif;
+    color:var(--white);
+    overflow:hidden;
+  }
+  #bgglow{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(600px 500px at 12% 8%, rgba(34,211,238,0.10), transparent 60%),
+      radial-gradient(700px 600px at 90% 92%, rgba(139,92,246,0.10), transparent 60%);
+  }
+
+  header{
+    position:relative; z-index:5;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 32px 10px 32px;
+    flex-wrap:wrap; gap:14px;
+  }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  .brand img{ width:38px; height:38px; opacity:0.95; }
+  .brand-text h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:20px; font-weight:700; margin:0; letter-spacing:0.2px;
+  }
+  .brand-text p{
+    margin:2px 0 0 0; font-size:12.5px; color:var(--muted);
+    font-family:'JetBrains Mono',monospace; letter-spacing:0.5px;
+  }
+  .stats{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cyan);
+    background:rgba(34,211,238,0.08); border:1px solid rgba(34,211,238,0.25);
+    padding:7px 14px; border-radius:20px; white-space:nowrap;
+  }
+  .controls{ display:flex; align-items:center; gap:10px; }
+  #search{
+    background:var(--panel2); border:1px solid var(--line); color:var(--white);
+    font-family:'Inter',sans-serif; font-size:13px; padding:9px 14px 9px 36px;
+    border-radius:20px; width:230px; outline:none; transition:border-color .2s;
+  }
+  #search:focus{ border-color:var(--cyan); }
+  .search-wrap{ position:relative; }
+  .search-wrap svg{ position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:0.5; }
+  .legend{
+    display:flex; gap:16px; flex-wrap:wrap; padding:2px 32px 14px 32px; position:relative; z-index:5;
+    font-size:12px; color:var(--muted); font-family:'JetBrains Mono',monospace;
+  }
+  .legend .item{ display:flex; align-items:center; gap:7px; }
+  .legend .dot{ width:9px; height:9px; border-radius:50%; }
+
+  #mapwrap{
+    position:relative; width:100%; height:calc(100% - 96px); z-index:2;
+  }
+  svg#mindmap{ width:100%; height:100%; display:block; cursor:grab; }
+  svg#mindmap.dragging{ cursor:grabbing; }
+
+  .node-circle{ transition:filter .18s ease, stroke-width .18s ease; }
+  .node-group{ cursor:pointer; }
+  .node-group.dim .node-circle{ opacity:0.18; }
+  .node-group.dim text{ opacity:0.18; }
+  .node-group.dim{ pointer-events:none; }
+  .node-group:hover .node-circle{ filter:brightness(1.35); }
+  .node-group.selected .node-circle{ stroke:var(--white); stroke-width:2.5; }
+
+  .link{ fill:none; stroke:var(--line); stroke-width:1.6; transition:opacity .18s ease, stroke .18s ease; }
+  .link.dim{ opacity:0.08; }
+  .link.lit{ stroke-opacity:0.9; stroke-width:2.2; }
+
+  .leaf-label{
+    font-family:'Inter',sans-serif; font-weight:500; font-size:13.5px; fill:var(--white);
+    pointer-events:none;
+  }
+  .tier-label{
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; fill:var(--white);
+    pointer-events:none;
+  }
+  .center-label{
+    font-family:'Space Grotesk',sans-serif; font-weight:700; fill:var(--white); pointer-events:none;
+  }
+
+  .tooltip{
+    position:fixed; z-index:50; pointer-events:none;
+    background:rgba(13,20,36,0.95); border:1px solid var(--line);
+    padding:6px 12px; border-radius:8px; font-size:12.5px; color:var(--white);
+    font-family:'Inter',sans-serif; opacity:0; transition:opacity .12s ease;
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+  }
+  .tooltip.show{ opacity:1; }
+
+  #panel{
+    position:fixed; top:0; right:0; height:100%; width:440px; max-width:92vw;
+    background:var(--panel2); border-left:1px solid var(--line);
+    box-shadow:-20px 0 60px rgba(0,0,0,0.45);
+    transform:translateX(100%); transition:transform .32s cubic-bezier(.2,.8,.2,1);
+    z-index:20; overflow-y:auto;
+  }
+  #panel.open{ transform:translateX(0); }
+  #panel-inner{ padding:34px 30px 50px 30px; }
+  #panel-close{
+    position:absolute; top:22px; right:24px; width:34px; height:34px; border-radius:50%;
+    background:var(--panel3); border:1px solid var(--line); color:var(--muted);
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+    font-size:16px; transition:color .15s, border-color .15s;
+  }
+  #panel-close:hover{ color:var(--white); border-color:var(--muted2); }
+  .panel-eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:600;
+    letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px;
+  }
+  .panel-title{
+    font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:700; line-height:1.15;
+    margin:0 0 18px 0;
+  }
+  .panel-desc{ font-size:15px; line-height:1.55; color:var(--white); margin-bottom:26px; }
+  .panel-section-label{
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:var(--muted);
+    letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px;
+  }
+  .code-block{
+    background:#0c1526; border:1px solid var(--line); border-radius:10px;
+    padding:16px 18px; font-family:'JetBrains Mono',monospace; font-size:13px;
+    color:#7dd3fc; white-space:pre; overflow-x:auto; line-height:1.55; margin-bottom:26px;
+  }
+  .mistakes-list{ list-style:none; margin:0; padding:0; }
+  .mistakes-list li{
+    display:flex; gap:10px; padding:10px 0; border-top:1px solid var(--line);
+    font-size:13.5px; line-height:1.45; color:var(--white);
+  }
+  .mistakes-list li:first-child{ border-top:none; }
+  .mistakes-list .warn{ flex:0 0 auto; color:var(--amber); font-size:14px; margin-top:1px; }
+
+  #overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.001); z-index:15; display:none;
+  }
+  #overlay.show{ display:block; }
+
+  .hint{
+    position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; color:var(--muted2);
+    z-index:5; background:rgba(13,20,36,0.7); padding:6px 16px; border-radius:14px;
+    border:1px solid var(--line);
+  }
+
+  ::-webkit-scrollbar{ width:8px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-thumb{ background:var(--panel3); border-radius:8px; }
+
+  @media (max-width:720px){
+    .brand-text h1{ font-size:16px; }
+    #search{ width:150px; }
+    .legend{ display:none; }
+    #panel{ width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<div id="bgglow"></div>
+
+<header>
+  <div class="brand">
+    <img src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/dds-logo-removebg-preview.png" alt="DDS">
+    <div class="brand-text">
+      <h1>Python for AI Residency</h1>
+      <p>LEARNING ROADMAP · DECODING DATA SCIENCE</p>
+    </div>
+  </div>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8b99b0" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Search a topic…" autocomplete="off">
+    </div>
+    <div class="stats" id="statsLabel">4 tiers · 23 topics</div>
+  </div>
+</header>
+
+<div class="legend" id="legend"></div>
+
+<div id="mapwrap">
+  <svg id="mindmap" viewBox="-820 -680 1640 1360" preserveAspectRatio="xMidYMid meet"></svg>
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+<div class="hint">Click any node to explore · Drag to pan · Scroll to zoom</div>
+
+<div id="overlay"></div>
+<div id="panel">
+  <div id="panel-close">✕</div>
+  <div id="panel-inner"></div>
+</div>
+
+<script>
+// ============================== DATA ==============================
+const DATA = [
+  {
+    id:'essentials', label:'Python Essentials', color:'#22d3ee', angle:-90,
+    subtitle:'The foundation — how to write and run real code',
+    topics:[
+      { label:'Data Types', desc:'Every value in Python has a type — integers, floats, strings, and booleans — which determines what you can do with it.',
+        example:'age = 25\nprice = 19.99\nname = "Arshad"\nis_active = True',
+        mistakes:['Confusing an integer with a string that looks like a number ("25" vs 25)','Forgetting that mixing incompatible types (e.g. string + int) raises an error'] },
+      { label:'Data Structures', desc:'Lists and dictionaries let you group and organize many values together — ordered by position, or looked up by key.',
+        example:'fruits = ["apple", "banana", "mango"]\nuser = {"name": "Ali", "age": 30}',
+        mistakes:["Trying to access a list index that doesn't exist (IndexError)",'Assuming dictionary order matters when your logic depends on it'] },
+      { label:'Control Flow', desc:'if/else, for loops, and while loops are how a program makes decisions and repeats actions.',
+        example:'if age >= 18:\n    print("Adult")\n\nfor fruit in fruits:\n    print(fruit)',
+        mistakes:['Writing an infinite while loop by forgetting to update the condition','Using = instead of == when comparing values'] },
+      { label:'Functions', desc:'A function packages logic under a name so you can reuse it with different inputs instead of rewriting code.',
+        example:'def greet(name):\n    return f"Hello, {name}!"\n\ngreet("Arshad")',
+        mistakes:['Forgetting to return a value and getting None by mistake','Reusing a variable name inside a function that shadows one outside it'] },
+      { label:'File Handling', desc:'Reading and writing files is how your program remembers data after it stops running.',
+        example:'with open("notes.txt") as f:\n    text = f.read()',
+        mistakes:['Forgetting to close a file when not using "with" (risk of data loss)','Opening a file in the wrong mode (read vs write) and overwriting data'] },
+    ]
+  },
+  {
+    id:'apis', label:'APIs, JSON & Error Handling', color:'#8b5cf6', angle:0,
+    subtitle:'Connecting your code to the real world',
+    topics:[
+      { label:'What Is an API?', desc:'A standard way for two pieces of software to talk to each other — like a waiter relaying your order to the kitchen.',
+        example:'GET https://api.weather.com/v1/current?city=Dubai',
+        mistakes:['Thinking the API IS the app, not just the messenger between your code and the service','Assuming every API is free, public, and unlimited'] },
+      { label:'Your First API Call', desc:'Every call needs an endpoint, a method, and often headers or a key. Python\'s requests library handles the rest.',
+        example:'import requests\nresponse = requests.get(url, params={"city": "Dubai"})\nprint(response.status_code)',
+        mistakes:['Not checking status_code before trusting the response','Hardcoding the API key directly in the script'] },
+      { label:'What Is JSON?', desc:"The text format almost every API uses to send data back — it looks a lot like a Python dictionary.",
+        example:'data = response.json()\ndata["user"]["name"]   # "Ali"',
+        mistakes:['Assuming a key always exists — use .get() instead of [] when unsure','Confusing JSON\'s true/false/null with Python\'s True/False/None'] },
+      { label:'Brittle to Robust Code', desc:'A brittle script assumes the API always works. Robust code checks status, sets timeouts, and provides fallbacks.',
+        example:'r = requests.get(url, timeout=5)\nif r.status_code == 200:\n    temp = r.json().get("temp_c", "N/A")',
+        mistakes:['Assuming the network and API will never fail','No timeout set — a slow API can hang your script forever'] },
+      { label:'Exception Handling', desc:'try/except lets your program attempt something risky and recover gracefully instead of crashing.',
+        example:'try:\n    data = requests.get(url).json()\nexcept requests.exceptions.Timeout:\n    print("Took too long")',
+        mistakes:['Using a bare except: that catches everything, even Ctrl+C','Silently swallowing errors with except: pass'] },
+    ]
+  },
+  {
+    id:'intermediate', label:'Intermediate Python', color:'#f5a623', angle:90,
+    subtitle:'Writing cleaner, more flexible code',
+    topics:[
+      { label:'List & Dict Comprehensions', desc:'Build a new list or dictionary in a single, readable line instead of a multi-line loop.',
+        example:'squares = [x**2 for x in numbers]',
+        mistakes:["Writing a comprehension so complex it's harder to read than the loop","Forgetting comprehensions still build a full new list in memory"] },
+      { label:'*args and **kwargs', desc:'Let a function accept a flexible number of positional or named inputs — used constantly in AI SDKs.',
+        example:'def total(*args):\n    return sum(args)\n\ntotal(1, 2, 3)   # 6',
+        mistakes:['Mixing up the order — *args must come before **kwargs in a signature','Overusing them when explicit named parameters would be clearer'] },
+      { label:'Env Variables & .env', desc:'Keep API keys and secrets out of your code by loading them from a .env file at runtime.',
+        example:'import os\napi_key = os.getenv("API_KEY")',
+        mistakes:['Committing a .env file to GitHub instead of adding it to .gitignore','Hardcoding a fallback secret value directly in the code'] },
+      { label:'Basic OOP: Classes', desc:'A class is a blueprint for creating objects that bundle data and behavior together.',
+        example:'class Agent:\n    def __init__(self, name):\n        self.name = name',
+        mistakes:['Forgetting self as the first parameter in a method','Confusing the class (blueprint) with an object (instance) created from it'] },
+      { label:'Context Managers', desc:'The "with" statement automatically cleans up a resource, even if an error occurs partway through.',
+        example:'with open("notes.txt") as f:\n    text = f.read()',
+        mistakes:['Not realizing "with" already replaces the need to manually close a file','Assuming cleanup only matters for files — it applies to connections too'] },
+      { label:'pip, venv & requirements.txt', desc:'How you install, isolate, and share the exact packages your project depends on.',
+        example:'python -m venv venv\npip install -r requirements.txt',
+        mistakes:['Installing packages globally instead of inside a virtual environment','Forgetting to update requirements.txt after installing something new'] },
+    ]
+  },
+  {
+    id:'advanced', label:'Advanced Python', color:'#34d399', angle:180,
+    subtitle:'Python under the hood — ready for AI frameworks',
+    topics:[
+      { label:'Decorators', desc:'A decorator wraps a function to add behavior without changing its own code — @tool, @app.route, and friends.',
+        example:'@shout\ndef greet():\n    return "hello"',
+        mistakes:["Assuming decorators are 'magic' instead of just functions returning functions",'Forgetting to return the wrapper function inside a decorator'] },
+      { label:'Generators & Iterators', desc:'A generator produces values one at a time with yield, instead of building a whole list upfront.',
+        example:'def count_up_to(n):\n    i = 1\n    while i <= n:\n        yield i\n        i += 1',
+        mistakes:["Trying to reuse a generator after it's already been fully consumed",'Confusing yield with return — yield pauses, return ends'] },
+      { label:'Async / Await', desc:'Lets your code run several operations concurrently instead of waiting for each one before the next.',
+        example:'results = await asyncio.gather(\n    fetch(url1), fetch(url2)\n)',
+        mistakes:['Calling an async function without await and getting a coroutine, not a result','Assuming async automatically means faster for CPU-heavy work'] },
+      { label:'Type Hints', desc:'Annotate what type a variable or function should be — most modern AI SDKs are written this way.',
+        example:'def greet(name: str) -> str:\n    return f"Hi, {name}"',
+        mistakes:["Believing type hints are enforced at runtime — Python doesn't check them by default",'Skipping them on public functions where they help most'] },
+      { label:'Logging', desc:'Replace scattered print() statements with leveled, timestamped output you can actually use in production.',
+        example:'logging.info("Starting API call")\nlogging.error("Call failed: %s", e)',
+        mistakes:['Leaving logging level at DEBUG in production, creating noisy output','Still using print() for errors that should be logged instead'] },
+      { label:'Custom Exceptions', desc:'Define your own error types so failures are specific and meaningful, not generic.',
+        example:'class APIKeyError(Exception):\n    pass',
+        mistakes:['Making a custom exception inherit from BaseException instead of Exception','Creating custom exceptions but still only catching generic Exception'] },
+      { label:'Testing with pytest', desc:'A test is a small, automated check that your code still works — run before you trust a change.',
+        example:'def test_add():\n    assert add(2, 3) == 5',
+        mistakes:["Only testing the 'happy path' and never edge cases (empty, zero, negative)",'Not running tests before pushing a change, defeating their purpose'] },
+    ]
+  },
+];
+
+// ============================== LAYOUT ==============================
+const svgNS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById('mindmap');
+const CENTER_R = 78, TIER_R = 52, LEAF_R = 30;
+const TIER_RING = 235, LEAF_RING = 500;
+
+function polar(cx, cy, r, angleDeg){
+  const a = (angleDeg - 90) * Math.PI / 180;
+  return [cx + r*Math.cos(a), cy + r*Math.sin(a)];
+}
+
+function curvePath(x1,y1,x2,y2, bend=0.35){
+  const mx = (x1+x2)/2, my=(y1+y2)/2;
+  const dx = x2-x1, dy = y2-y1;
+  const nx = -dy, ny = dx;
+  const cx = mx + nx*bend*0.18, cy = my + ny*bend*0.18;
+  return `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
+}
+
+function el(tag, attrs, parent){
+  const e = document.createElementNS(svgNS, tag);
+  for(const k in attrs) e.setAttribute(k, attrs[k]);
+  if(parent) parent.appendChild(e);
+  return e;
+}
+
+function wrapLabel(text, maxChars){
+  const words = text.split(' ');
+  const lines = [];
+  let cur = '';
+  words.forEach(w=>{
+    if((cur+' '+w).trim().length > maxChars){ lines.push(cur.trim()); cur = w; }
+    else cur = (cur+' '+w).trim();
+  });
+  if(cur) lines.push(cur);
+  return lines;
+}
+
+const allNodeGroups = [];
+const allLinks = [];
+let selectedId = null;
+
+function build(){
+  const linkLayer = el('g', {id:'links'}, svg);
+  const nodeLayer = el('g', {id:'nodes'}, svg);
+
+  // center node
+  const [cx, cy] = [0,0];
+  const centerG = el('g', {class:'node-group', 'data-id':'center'}, nodeLayer);
+  el('circle', {cx, cy, r:CENTER_R, class:'node-circle', fill:'url(#centerGrad)', stroke:'#2a3a5c', 'stroke-width':1.5}, centerG);
+  const centerText = el('text', {x:cx, y:cy, 'text-anchor':'middle', class:'center-label'}, centerG);
+  ['Python','Roadmap'].forEach((line,i)=>{
+    el('tspan', {x:cx, dy: i===0? -4 : 20, 'font-size': i===0?17:14, opacity:i===0?1:0.85}, centerText).textContent = line;
+  });
+  allNodeGroups.push({group:centerG, id:'center', kind:'center', label:'Python for AI Residency'});
+
+  DATA.forEach(tier=>{
+    const [tx, ty] = polar(cx, cy, TIER_RING, tier.angle);
+    // link center -> tier
+    const lpath = el('path', {d:curvePath(cx,cy,tx,ty), class:'link', stroke:tier.color, 'stroke-opacity':0.55}, linkLayer);
+    allLinks.push({path:lpath, from:'center', to:tier.id});
+
+    const tierG = el('g', {class:'node-group', 'data-id':tier.id}, nodeLayer);
+    el('circle', {cx:tx, cy:ty, r:TIER_R, class:'node-circle', fill:tier.color, opacity:0.92}, tierG);
+    const lines = wrapLabel(tier.label, 13);
+    const tierText = el('text', {x:tx, y:ty, 'text-anchor':'middle', class:'tier-label'}, tierG);
+    const startDy = -(lines.length-1)*9;
+    lines.forEach((line,i)=>{
+      el('tspan', {x:tx, dy: i===0? startDy : 18}, tierText).textContent = line;
+    });
+    allNodeGroups.push({group:tierG, id:tier.id, kind:'tier', label:tier.label, color:tier.color});
+
+    // leaves
+    const n = tier.topics.length;
+    const arcSpan = 78;
+    tier.topics.forEach((topic, i)=>{
+      const leafAngle = n===1 ? tier.angle : tier.angle - arcSpan/2 + arcSpan*i/(n-1);
+      const [lx, ly] = polar(cx, cy, LEAF_RING, leafAngle);
+      const leafId = tier.id + '__' + i;
+
+      const llink = el('path', {d:curvePath(tx,ty,lx,ly), class:'link', stroke:tier.color, 'stroke-opacity':0.32}, linkLayer);
+      allLinks.push({path:llink, from:tier.id, to:leafId});
+
+      const leafG = el('g', {class:'node-group', 'data-id':leafId}, nodeLayer);
+      el('circle', {cx:lx, cy:ly, r:LEAF_R, class:'node-circle', fill:'#101a2e', stroke:tier.color, 'stroke-width':2}, leafG);
+      el('circle', {cx:lx, cy:ly, r:5, fill:tier.color}, leafG);
+
+      // label offset outward
+      const labelDist = LEAF_R + 14;
+      const [labx, laby] = polar(cx, cy, LEAF_RING + labelDist, leafAngle);
+      const anchor = Math.cos((leafAngle-90)*Math.PI/180) > 0.15 ? 'start' : (Math.cos((leafAngle-90)*Math.PI/180) < -0.15 ? 'end' : 'middle');
+      const labLines = wrapLabel(topic.label, 16);
+      const labText = el('text', {x:labx, y:laby, 'text-anchor':anchor, class:'leaf-label'}, leafG);
+      const lstartDy = -(labLines.length-1)*8 + 5;
+      labLines.forEach((line,li)=>{
+        el('tspan', {x:labx, dy: li===0? lstartDy : 16}, labText).textContent = line;
+      });
+
+      allNodeGroups.push({group:leafG, id:leafId, kind:'leaf', label:topic.label, color:tier.color, data:topic, tierLabel:tier.label});
+    });
+  });
+}
+
+// gradient defs
+const defs = el('defs', {}, svg);
+const grad = el('radialGradient', {id:'centerGrad', cx:'35%', cy:'30%', r:'75%'}, defs);
+el('stop', {offset:'0%', 'stop-color':'#2a3a6a'}, grad);
+el('stop', {offset:'100%', 'stop-color':'#101a2e'}, grad);
+
+build();
+
+// ============================== LEGEND ==============================
+const legendEl = document.getElementById('legend');
+DATA.forEach(t=>{
+  const item = document.createElement('div');
+  item.className = 'item';
+  item.innerHTML = `<span class="dot" style="background:${t.color}"></span>${t.label}`;
+  legendEl.appendChild(item);
+});
+
+// ============================== INTERACTION ==============================
+const tooltip = document.getElementById('tooltip');
+const panel = document.getElementById('panel');
+const panelInner = document.getElementById('panel-inner');
+const overlay = document.getElementById('overlay');
+
+function findNode(id){ return allNodeGroups.find(n=>n.id===id); }
+
+function showTooltip(evt, text){
+  tooltip.textContent = text;
+  tooltip.style.left = (evt.clientX + 16) + 'px';
+  tooltip.style.top = (evt.clientY + 12) + 'px';
+  tooltip.classList.add('show');
+}
+function hideTooltip(){ tooltip.classList.remove('show'); }
+
+function openPanel(node){
+  selectedId = node.id;
+  refreshSelection();
+  const t = node.data;
+  const color = node.color;
+  panelInner.innerHTML = `
+    <div class="panel-eyebrow" style="color:${color}">${node.tierLabel}</div>
+    <h2 class="panel-title">${t.label}</h2>
+    <p class="panel-desc">${t.desc}</p>
+    <div class="panel-section-label">Example</div>
+    <div class="code-block">${escapeHtml(t.example)}</div>
+    <div class="panel-section-label">Common Mistakes</div>
+    <ul class="mistakes-list">
+      ${t.mistakes.map(m=>`<li><span class="warn">▲</span><span>${m}</span></li>`).join('')}
+    </ul>
+  `;
+  panel.classList.add('open');
+  overlay.classList.add('show');
+}
+function closePanel(){
+  panel.classList.remove('open');
+  overlay.classList.remove('show');
+  selectedId = null;
+  refreshSelection();
+}
+function escapeHtml(str){
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function refreshSelection(){
+  allNodeGroups.forEach(n=>{
+    n.group.classList.toggle('selected', n.id===selectedId);
+  });
+}
+
+allNodeGroups.forEach(n=>{
+  n.group.addEventListener('mouseenter', (e)=>{
+    if(n.kind==='leaf') showTooltip(e, n.tierLabel + ' → ' + n.label);
+    else if(n.kind==='tier') showTooltip(e, n.label);
+  });
+  n.group.addEventListener('mousemove', (e)=>{
+    tooltip.style.left = (e.clientX + 16) + 'px';
+    tooltip.style.top = (e.clientY + 12) + 'px';
+  });
+  n.group.addEventListener('mouseleave', hideTooltip);
+  n.group.addEventListener('click', ()=>{
+    if(n.kind==='leaf') openPanel(n);
+  });
+});
+
+document.getElementById('panel-close').addEventListener('click', closePanel);
+overlay.addEventListener('click', closePanel);
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closePanel(); });
+
+// ============================== SEARCH ==============================
+const searchInput = document.getElementById('search');
+searchInput.addEventListener('input', ()=>{
+  const q = searchInput.value.trim().toLowerCase();
+  if(!q){
+    allNodeGroups.forEach(n=>n.group.classList.remove('dim'));
+    allLinks.forEach(l=>l.path.classList.remove('dim'));
+    return;
+  }
+  const matchIds = new Set();
+  allNodeGroups.forEach(n=>{
+    const match = n.label.toLowerCase().includes(q);
+    if(match){
+      matchIds.add(n.id);
+      if(n.kind==='leaf'){
+        matchIds.add(n.id.split('__')[0]);
+        matchIds.add('center');
+      }
+    }
+  });
+  allNodeGroups.forEach(n=>{
+    n.group.classList.toggle('dim', !matchIds.has(n.id));
+  });
+  allLinks.forEach(l=>{
+    const lit = matchIds.has(l.to) && matchIds.has(l.from);
+    l.path.classList.toggle('dim', !lit);
+  });
+});
+
+// ============================== PAN & ZOOM ==============================
+let viewBox = {x:-820, y:-680, w:1640, h:1360};
+function applyViewBox(){ svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`); }
+
+let isPanning = false, panStart = {x:0,y:0}, vbStart = {x:0,y:0};
+svg.addEventListener('mousedown', (e)=>{
+  isPanning = true; svg.classList.add('dragging');
+  panStart = {x:e.clientX, y:e.clientY};
+  vbStart = {x:viewBox.x, y:viewBox.y};
+});
+window.addEventListener('mousemove', (e)=>{
+  if(!isPanning) return;
+  const rect = svg.getBoundingClientRect();
+  const scale = viewBox.w / rect.width;
+  viewBox.x = vbStart.x - (e.clientX - panStart.x) * scale;
+  viewBox.y = vbStart.y - (e.clientY - panStart.y) * scale;
+  applyViewBox();
+});
+window.addEventListener('mouseup', ()=>{ isPanning=false; svg.classList.remove('dragging'); });
+
+svg.addEventListener('wheel', (e)=>{
+  e.preventDefault();
+  const rect = svg.getBoundingClientRect();
+  const mx = viewBox.x + (e.clientX - rect.left)/rect.width * viewBox.w;
+  const my = viewBox.y + (e.clientY - rect.top)/rect.height * viewBox.h;
+  const factor = e.deltaY > 0 ? 1.1 : 0.9;
+  const newW = Math.min(Math.max(viewBox.w * factor, 700), 3200);
+  const newH = newW * (viewBox.h/viewBox.w);
+  viewBox.x = mx - (mx - viewBox.x) * (newW/viewBox.w);
+  viewBox.y = my - (my - viewBox.y) * (newH/viewBox.h);
+  viewBox.w = newW; viewBox.h = newH;
+  applyViewBox();
+}, {passive:false});
+</script>
+</body>
+</html>
