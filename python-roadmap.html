@@ -81,14 +81,17 @@
   svg#mindmap.dragging{ cursor:grabbing; }
 
   .node-circle{ transition:filter .18s ease, stroke-width .18s ease; }
-  .node-group{ cursor:pointer; }
+  .node-group{ cursor:pointer; transform-box:fill-box; transform-origin:center; transition:opacity .35s ease, transform .35s cubic-bezier(.34,1.3,.64,1); }
+  .node-group.collapsed{ opacity:0; transform:scale(0.15); pointer-events:none; }
   .node-group.dim .node-circle{ opacity:0.18; }
   .node-group.dim text{ opacity:0.18; }
   .node-group.dim{ pointer-events:none; }
   .node-group:hover .node-circle{ filter:brightness(1.35); }
   .node-group.selected .node-circle{ stroke:var(--white); stroke-width:2.5; }
+  .node-group.tier-node.active .node-circle{ stroke:var(--white); stroke-width:2.5; }
 
-  .link{ fill:none; stroke:var(--line); stroke-width:1.6; transition:opacity .18s ease, stroke .18s ease; }
+  .link{ fill:none; stroke:var(--line); stroke-width:1.6; transition:opacity .3s ease, stroke .18s ease; }
+  .link.collapsed{ opacity:0; }
   .link.dim{ opacity:0.08; }
   .link.lit{ stroke-opacity:0.9; stroke-width:2.2; }
 
@@ -138,6 +141,34 @@
     margin:0 0 18px 0;
   }
   .panel-desc{ font-size:15px; line-height:1.55; color:var(--white); margin-bottom:26px; }
+  .video-wrap{
+    position:relative; width:100%; padding-top:56.25%; margin-bottom:22px;
+    border-radius:12px; overflow:hidden; background:#000; border:1px solid var(--line);
+  }
+  .video-wrap iframe{
+    position:absolute; top:0; left:0; width:100%; height:100%; border:0;
+  }
+  .video-placeholder{
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    width:100%; padding-top:0; height:170px; margin-bottom:22px;
+    border-radius:12px; background:var(--panel3); border:1px dashed var(--line);
+    color:var(--muted2); font-size:13px; font-family:'JetBrains Mono',monospace;
+  }
+  .video-placeholder svg{ opacity:0.5; }
+  .toggle-btn{
+    display:inline-flex; align-items:center; gap:8px; cursor:pointer; user-select:none;
+    background:var(--panel3); border:1px solid var(--line); border-radius:10px;
+    padding:11px 16px; font-size:13.5px; font-weight:500; color:var(--white);
+    margin-bottom:0; transition:border-color .15s, background .15s; width:100%;
+  }
+  .toggle-btn:hover{ border-color:var(--muted2); background:#1a2740; }
+  .toggle-btn .chev{ transition:transform .25s ease; margin-left:auto; opacity:0.7; }
+  .toggle-btn.expanded .chev{ transform:rotate(180deg); }
+  .detail-extra{
+    max-height:0; overflow:hidden; transition:max-height .35s ease;
+  }
+  .detail-extra.open{ max-height:900px; }
+  .detail-extra-inner{ padding-top:22px; }
   .panel-section-label{
     font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:var(--muted);
     letter-spacing:1.5px; text-transform:uppercase; margin-bottom:10px;
@@ -203,11 +234,11 @@
 <div class="legend" id="legend"></div>
 
 <div id="mapwrap">
-  <svg id="mindmap" viewBox="-820 -680 1640 1360" preserveAspectRatio="xMidYMid meet"></svg>
+  <svg id="mindmap" viewBox="-260 -220 520 440" preserveAspectRatio="xMidYMid meet"></svg>
 </div>
 
 <div class="tooltip" id="tooltip"></div>
-<div class="hint">Click any node to explore · Drag to pan · Scroll to zoom</div>
+<div class="hint" id="hint">Click the center bubble to begin</div>
 
 <div id="overlay"></div>
 <div id="panel">
@@ -222,19 +253,19 @@ const DATA = [
     id:'essentials', label:'Python Essentials', color:'#22d3ee', angle:-90,
     subtitle:'The foundation — how to write and run real code',
     topics:[
-      { label:'Data Types', desc:'Every value in Python has a type — integers, floats, strings, and booleans — which determines what you can do with it.',
+      { label:'Data Types', video:'UujIwmkROf0', desc:'Every value in Python has a type — integers, floats, strings, and booleans — which determines what you can do with it.',
         example:'age = 25\nprice = 19.99\nname = "Arshad"\nis_active = True',
         mistakes:['Confusing an integer with a string that looks like a number ("25" vs 25)','Forgetting that mixing incompatible types (e.g. string + int) raises an error'] },
-      { label:'Data Structures', desc:'Lists and dictionaries let you group and organize many values together — ordered by position, or looked up by key.',
+      { label:'Data Structures', video:'bPE8v8VdGB4', desc:'Lists and dictionaries let you group and organize many values together — ordered by position, or looked up by key.',
         example:'fruits = ["apple", "banana", "mango"]\nuser = {"name": "Ali", "age": 30}',
         mistakes:["Trying to access a list index that doesn't exist (IndexError)",'Assuming dictionary order matters when your logic depends on it'] },
-      { label:'Control Flow', desc:'if/else, for loops, and while loops are how a program makes decisions and repeats actions.',
+      { label:'Control Flow', video:'bPE8v8VdGB4', desc:'if/else, for loops, and while loops are how a program makes decisions and repeats actions.',
         example:'if age >= 18:\n    print("Adult")\n\nfor fruit in fruits:\n    print(fruit)',
         mistakes:['Writing an infinite while loop by forgetting to update the condition','Using = instead of == when comparing values'] },
-      { label:'Functions', desc:'A function packages logic under a name so you can reuse it with different inputs instead of rewriting code.',
+      { label:'Functions', video:'0qAtCwvredA', desc:'A function packages logic under a name so you can reuse it with different inputs instead of rewriting code.',
         example:'def greet(name):\n    return f"Hello, {name}!"\n\ngreet("Arshad")',
         mistakes:['Forgetting to return a value and getting None by mistake','Reusing a variable name inside a function that shadows one outside it'] },
-      { label:'File Handling', desc:'Reading and writing files is how your program remembers data after it stops running.',
+      { label:'File Handling', video:'BydhnCw0DWw', desc:'Reading and writing files is how your program remembers data after it stops running.',
         example:'with open("notes.txt") as f:\n    text = f.read()',
         mistakes:['Forgetting to close a file when not using "with" (risk of data loss)','Opening a file in the wrong mode (read vs write) and overwriting data'] },
     ]
@@ -317,7 +348,7 @@ const DATA = [
 const svgNS = "http://www.w3.org/2000/svg";
 const svg = document.getElementById('mindmap');
 const CENTER_R = 78, TIER_R = 52, LEAF_R = 30;
-const TIER_RING = 235, LEAF_RING = 500;
+const TIER_RING = 235, LEAF_RING = 560;
 
 function polar(cx, cy, r, angleDeg){
   const a = (angleDeg - 90) * Math.PI / 180;
@@ -372,10 +403,11 @@ function build(){
   DATA.forEach(tier=>{
     const [tx, ty] = polar(cx, cy, TIER_RING, tier.angle);
     // link center -> tier
-    const lpath = el('path', {d:curvePath(cx,cy,tx,ty), class:'link', stroke:tier.color, 'stroke-opacity':0.55}, linkLayer);
+    const lpath = el('path', {d:curvePath(cx,cy,tx,ty), class:'link collapsed', stroke:tier.color, 'stroke-opacity':0.55}, linkLayer);
     allLinks.push({path:lpath, from:'center', to:tier.id});
 
-    const tierG = el('g', {class:'node-group', 'data-id':tier.id}, nodeLayer);
+    const tierG = el('g', {class:'node-group tier-node collapsed', 'data-id':tier.id}, nodeLayer);
+    el('circle', {cx:tx, cy:ty, r:TIER_R+18, fill:'transparent', style:'pointer-events:all'}, tierG);
     el('circle', {cx:tx, cy:ty, r:TIER_R, class:'node-circle', fill:tier.color, opacity:0.92}, tierG);
     const lines = wrapLabel(tier.label, 13);
     const tierText = el('text', {x:tx, y:ty, 'text-anchor':'middle', class:'tier-label'}, tierG);
@@ -387,16 +419,17 @@ function build(){
 
     // leaves
     const n = tier.topics.length;
-    const arcSpan = 78;
+    const arcSpan = 68;
     tier.topics.forEach((topic, i)=>{
       const leafAngle = n===1 ? tier.angle : tier.angle - arcSpan/2 + arcSpan*i/(n-1);
       const [lx, ly] = polar(cx, cy, LEAF_RING, leafAngle);
       const leafId = tier.id + '__' + i;
 
-      const llink = el('path', {d:curvePath(tx,ty,lx,ly), class:'link', stroke:tier.color, 'stroke-opacity':0.32}, linkLayer);
+      const llink = el('path', {d:curvePath(tx,ty,lx,ly), class:'link collapsed', stroke:tier.color, 'stroke-opacity':0.32}, linkLayer);
       allLinks.push({path:llink, from:tier.id, to:leafId});
 
-      const leafG = el('g', {class:'node-group', 'data-id':leafId}, nodeLayer);
+      const leafG = el('g', {class:'node-group leaf-node collapsed', 'data-id':leafId, 'data-tier':tier.id}, nodeLayer);
+      el('circle', {cx:lx, cy:ly, r:LEAF_R+14, fill:'transparent', style:'pointer-events:all'}, leafG);
       el('circle', {cx:lx, cy:ly, r:LEAF_R, class:'node-circle', fill:'#101a2e', stroke:tier.color, 'stroke-width':2}, leafG);
       el('circle', {cx:lx, cy:ly, r:5, fill:tier.color}, leafG);
 
@@ -411,7 +444,7 @@ function build(){
         el('tspan', {x:labx, dy: li===0? lstartDy : 16}, labText).textContent = line;
       });
 
-      allNodeGroups.push({group:leafG, id:leafId, kind:'leaf', label:topic.label, color:tier.color, data:topic, tierLabel:tier.label});
+      allNodeGroups.push({group:leafG, id:leafId, kind:'leaf', label:topic.label, color:tier.color, data:topic, tierLabel:tier.label, tierId:tier.id});
     });
   });
 }
@@ -454,19 +487,42 @@ function openPanel(node){
   refreshSelection();
   const t = node.data;
   const color = node.color;
+  const videoBlock = t.video
+    ? `<div class="video-wrap"><iframe src="https://www.youtube.com/embed/${t.video}" title="${t.label}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+    : `<div class="video-placeholder">
+         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5c6b85" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/></svg>
+         <span>Video coming soon</span>
+       </div>`;
   panelInner.innerHTML = `
     <div class="panel-eyebrow" style="color:${color}">${node.tierLabel}</div>
     <h2 class="panel-title">${t.label}</h2>
+    ${videoBlock}
     <p class="panel-desc">${t.desc}</p>
-    <div class="panel-section-label">Example</div>
-    <div class="code-block">${escapeHtml(t.example)}</div>
-    <div class="panel-section-label">Common Mistakes</div>
-    <ul class="mistakes-list">
-      ${t.mistakes.map(m=>`<li><span class="warn">▲</span><span>${m}</span></li>`).join('')}
-    </ul>
+    <div class="toggle-btn" id="detailToggle">
+      <span>Show example &amp; common mistakes</span>
+      <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="detail-extra" id="detailExtra">
+      <div class="detail-extra-inner">
+        <div class="panel-section-label">Example</div>
+        <div class="code-block">${escapeHtml(t.example)}</div>
+        <div class="panel-section-label">Common Mistakes</div>
+        <ul class="mistakes-list">
+          ${t.mistakes.map(m=>`<li><span class="warn">▲</span><span>${m}</span></li>`).join('')}
+        </ul>
+      </div>
+    </div>
   `;
+  const toggleBtn = document.getElementById('detailToggle');
+  const extra = document.getElementById('detailExtra');
+  toggleBtn.addEventListener('click', ()=>{
+    const isOpen = extra.classList.toggle('open');
+    toggleBtn.classList.toggle('expanded', isOpen);
+    toggleBtn.querySelector('span').textContent = isOpen ? 'Hide example & common mistakes' : 'Show example & common mistakes';
+  });
   panel.classList.add('open');
   overlay.classList.add('show');
+  panelInner.scrollTop = 0;
 }
 function closePanel(){
   panel.classList.remove('open');
@@ -484,10 +540,63 @@ function refreshSelection(){
   });
 }
 
+// ============================== EXPAND / COLLAPSE ==============================
+let tiersExpanded = false;
+let expandedTier = null;
+const hintEl = document.getElementById('hint');
+function setHint(text){ hintEl.textContent = text; }
+
+function showGroup(n){ n.group.classList.remove('collapsed'); }
+function hideGroup(n){ n.group.classList.add('collapsed'); }
+function showLink(l){ l.path.classList.remove('collapsed'); }
+function hideLink(l){ l.path.classList.add('collapsed'); }
+
+function collapseTierLeaves(tierId){
+  allNodeGroups.filter(n=>n.kind==='leaf' && n.tierId===tierId).forEach(hideGroup);
+  allLinks.filter(l=>l.from===tierId).forEach(hideLink);
+}
+
+function expandTiers(){
+  tiersExpanded = true;
+  allNodeGroups.filter(n=>n.kind==='tier').forEach(showGroup);
+  allLinks.filter(l=>l.from==='center').forEach(showLink);
+  animateViewBox(VB_TIERS);
+  setHint('Click a category to see its topics');
+}
+
+function collapseAll(){
+  tiersExpanded = false;
+  expandedTier = null;
+  allNodeGroups.filter(n=>n.kind==='tier'||n.kind==='leaf').forEach(hideGroup);
+  allLinks.forEach(hideLink);
+  allNodeGroups.forEach(n=>n.group.classList.remove('active'));
+  animateViewBox(VB_CENTER);
+  setHint('Click the center bubble to begin');
+}
+
+function toggleTier(tierId){
+  const wasSame = expandedTier === tierId;
+  if(expandedTier && expandedTier !== tierId) collapseTierLeaves(expandedTier);
+  if(wasSame){
+    collapseTierLeaves(tierId);
+    expandedTier = null;
+    animateViewBox(VB_TIERS);
+    setHint('Click a category to see its topics');
+  } else {
+    allNodeGroups.filter(n=>n.kind==='leaf' && n.tierId===tierId).forEach(showGroup);
+    allLinks.filter(l=>l.from===tierId).forEach(showLink);
+    expandedTier = tierId;
+    animateViewBox(VB_FULL);
+    setHint('Click a topic to see its video and details');
+  }
+  allNodeGroups.filter(n=>n.kind==='tier').forEach(n=>n.group.classList.toggle('active', n.id===expandedTier));
+}
+
 allNodeGroups.forEach(n=>{
   n.group.addEventListener('mouseenter', (e)=>{
     if(n.kind==='leaf') showTooltip(e, n.tierLabel + ' → ' + n.label);
     else if(n.kind==='tier') showTooltip(e, n.label);
+    else if(n.kind==='center') showTooltip(e, tiersExpanded ? 'Click to collapse' : 'Click to begin');
   });
   n.group.addEventListener('mousemove', (e)=>{
     tooltip.style.left = (e.clientX + 16) + 'px';
@@ -495,7 +604,14 @@ allNodeGroups.forEach(n=>{
   });
   n.group.addEventListener('mouseleave', hideTooltip);
   n.group.addEventListener('click', ()=>{
-    if(n.kind==='leaf') openPanel(n);
+    hideTooltip();
+    if(n.kind==='center'){
+      if(tiersExpanded) collapseAll(); else expandTiers();
+    } else if(n.kind==='tier'){
+      toggleTier(n.id);
+    } else if(n.kind==='leaf'){
+      openPanel(n);
+    }
   });
 });
 
@@ -505,8 +621,34 @@ document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closePanel(); }
 
 // ============================== SEARCH ==============================
 const searchInput = document.getElementById('search');
+let preSearchState = null;
+
 searchInput.addEventListener('input', ()=>{
   const q = searchInput.value.trim().toLowerCase();
+
+  if(q && !preSearchState){
+    preSearchState = {tiersExpanded, expandedTier};
+    allNodeGroups.filter(n=>n.kind!=='center').forEach(showGroup);
+    allLinks.forEach(showLink);
+    animateViewBox(VB_FULL);
+    setHint('Clear the search to return to where you were');
+  }
+  if(!q && preSearchState){
+    const restore = preSearchState;
+    preSearchState = null;
+    allNodeGroups.filter(n=>n.kind==='tier'||n.kind==='leaf').forEach(hideGroup);
+    allLinks.forEach(hideLink);
+    tiersExpanded = false; expandedTier = null;
+    allNodeGroups.forEach(n=>n.group.classList.remove('active'));
+    if(restore.tiersExpanded){
+      expandTiers();
+      if(restore.expandedTier) toggleTier(restore.expandedTier);
+    } else {
+      animateViewBox(VB_CENTER);
+      setHint('Click the center bubble to begin');
+    }
+  }
+
   if(!q){
     allNodeGroups.forEach(n=>n.group.classList.remove('dim'));
     allLinks.forEach(l=>l.path.classList.remove('dim'));
@@ -533,8 +675,31 @@ searchInput.addEventListener('input', ()=>{
 });
 
 // ============================== PAN & ZOOM ==============================
-let viewBox = {x:-820, y:-680, w:1640, h:1360};
+const VB_CENTER = {x:-260, y:-220, w:520, h:440};
+const VB_TIERS  = {x:-560, y:-470, w:1120, h:940};
+const VB_FULL   = {x:-880, y:-740, w:1760, h:1480};
+let viewBox = {...VB_CENTER};
 function applyViewBox(){ svg.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`); }
+applyViewBox();
+
+let vbAnimFrame = null;
+function animateViewBox(target, duration=550){
+  if(vbAnimFrame) cancelAnimationFrame(vbAnimFrame);
+  const start = {x:viewBox.x, y:viewBox.y, w:viewBox.w, h:viewBox.h};
+  const t0 = performance.now();
+  function ease(t){ return 1 - Math.pow(1-t, 3); }
+  function step(now){
+    const t = Math.min((now - t0) / duration, 1);
+    const e = ease(t);
+    viewBox.x = start.x + (target.x - start.x) * e;
+    viewBox.y = start.y + (target.y - start.y) * e;
+    viewBox.w = start.w + (target.w - start.w) * e;
+    viewBox.h = start.h + (target.h - start.h) * e;
+    applyViewBox();
+    vbAnimFrame = t < 1 ? requestAnimationFrame(step) : null;
+  }
+  vbAnimFrame = requestAnimationFrame(step);
+}
 
 let isPanning = false, panStart = {x:0,y:0}, vbStart = {x:0,y:0};
 svg.addEventListener('mousedown', (e)=>{
@@ -558,7 +723,7 @@ svg.addEventListener('wheel', (e)=>{
   const mx = viewBox.x + (e.clientX - rect.left)/rect.width * viewBox.w;
   const my = viewBox.y + (e.clientY - rect.top)/rect.height * viewBox.h;
   const factor = e.deltaY > 0 ? 1.1 : 0.9;
-  const newW = Math.min(Math.max(viewBox.w * factor, 700), 3200);
+  const newW = Math.min(Math.max(viewBox.w * factor, 260), 3200);
   const newH = newW * (viewBox.h/viewBox.w);
   viewBox.x = mx - (mx - viewBox.x) * (newW/viewBox.w);
   viewBox.y = my - (my - viewBox.y) * (newH/viewBox.h);
