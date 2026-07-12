@@ -1,0 +1,558 @@
+<!-- ============================================================
+  Decoding Data Science — Agentic AI Demo Challenge
+  Solo, free, submission deadline Aug 2 2026 11:45 PM GST.
+  Single-file landing page. Paste into a WordPress Custom HTML block.
+  No <html>/<head>/<body> wrapper needed — works embedded as-is.
+
+  ⚠️ TWO ASSETS STILL NEED YOUR REAL URLs (placeholders marked CHANGE-ME below):
+     1. New CPD certificate image (currently falls back to the old certificate asset)
+     2. "CPD Verified" logo (currently falls back to the CPD Member logo)
+  ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  #dds-demo{
+    --bg:#070b14; --bg2:#0d1424; --panel:#101a2e; --line:rgba(140,170,220,.14);
+    --cyan:#22d3ee; --violet:#8b5cf6; --amber:#f5a623; --gold:#f5c451;
+    --txt:#e7edf7; --muted:#94a3bd;
+    --grad:linear-gradient(92deg,#22d3ee 0%,#8b5cf6 100%);
+    --grad-gold:linear-gradient(92deg,#f5c451 0%,#f5a623 100%);
+    --radius:16px;
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg); color:var(--txt);
+    line-height:1.6; font-size:16px;
+    margin:0; overflow-x:hidden;
+  }
+  #dds-demo *,#dds-demo *::before,#dds-demo *::after{box-sizing:border-box;margin:0;padding:0}
+  #dds-demo img{max-width:100%;display:block}
+  #dds-demo a{text-decoration:none;color:inherit}
+  #dds-demo .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+  #dds-demo section{padding:64px 0;position:relative}
+  #dds-demo h1,#dds-demo h2,#dds-demo h3{font-family:'Space Grotesk',sans-serif;line-height:1.15;letter-spacing:-.01em}
+  #dds-demo h2{font-size:clamp(26px,3.6vw,38px);margin-bottom:12px}
+  #dds-demo .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);display:inline-flex;align-items:center;gap:8px;margin-bottom:12px}
+  #dds-demo .kicker::before{content:"";width:22px;height:1px;background:var(--cyan)}
+  #dds-demo .lead{color:var(--muted);font-size:16.5px;max-width:640px}
+  #dds-demo .center{text-align:center}
+  #dds-demo .center .lead{margin:0 auto}
+
+  #dds-demo .rv{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+  #dds-demo .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){#dds-demo .rv{opacity:1;transform:none;transition:none}#dds-demo *{animation:none!important;transition:none!important}}
+
+  /* ---------- Deadline bar ---------- */
+  #dds-demo .urgency{position:sticky;top:0;z-index:60;background:rgba(7,11,20,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:center;text-align:center}
+  #dds-demo .urgency .u-label{font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.06em;color:var(--amber);text-transform:uppercase}
+  #dds-demo .u-clock{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:16px;color:#fff;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.4);border-radius:8px;padding:2px 12px}
+  #dds-demo .u-btn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;background:var(--grad);color:#06101c;border-radius:999px;padding:7px 18px;transition:transform .2s,box-shadow .2s;white-space:nowrap}
+  #dds-demo .u-btn:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(34,211,238,.35)}
+
+  /* ---------- Hero ---------- */
+  #dds-demo .hero{padding:52px 0 56px;background:
+    radial-gradient(900px 460px at 80% -10%,rgba(139,92,246,.22),transparent 60%),
+    radial-gradient(700px 400px at 8% 12%,rgba(34,211,238,.15),transparent 60%),var(--bg)}
+  #dds-demo .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:linear-gradient(rgba(140,170,220,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(140,170,220,.06) 1px,transparent 1px);
+    background-size:44px 44px;mask-image:radial-gradient(600px 360px at 50% 0%,#000 30%,transparent 75%)}
+  #dds-demo .hero .wrap{position:relative;z-index:1}
+  #dds-demo .brandrow{display:flex;justify-content:center;margin-bottom:20px}
+  #dds-demo .brandrow img{height:64px;width:auto;opacity:.95}
+  #dds-demo .badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:22px}
+  #dds-demo .badge{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.05em;border:1px solid var(--line);border-radius:999px;padding:5px 13px;color:var(--muted);background:rgba(16,26,46,.6);transition:transform .25s,border-color .25s,box-shadow .25s,color .25s}
+  #dds-demo .badge:hover{transform:translateY(-2px);border-color:rgba(34,211,238,.6);color:var(--cyan);box-shadow:0 8px 20px rgba(34,211,238,.18)}
+  #dds-demo .badge.hot{border-color:rgba(34,211,238,.5);color:var(--cyan)}
+  #dds-demo .badge.glow{border-color:rgba(139,92,246,.55);color:#c4b5fd;background:rgba(139,92,246,.1)}
+  #dds-demo .badge.glow:hover{border-color:rgba(139,92,246,.9);color:#fff;box-shadow:0 8px 22px rgba(139,92,246,.35)}
+  #dds-demo .hero h1{font-size:clamp(28px,4.8vw,48px);text-align:center;max-width:840px;margin:0 auto 16px;font-weight:700}
+  #dds-demo .hero h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  #dds-demo .hero .sub{text-align:center;color:var(--muted);max-width:680px;margin:0 auto 26px;font-size:16.5px}
+  #dds-demo .cta-row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:12px}
+  #dds-demo .btn{font-family:'Space Grotesk',sans-serif;font-weight:600;border-radius:12px;padding:15px 30px;font-size:16px;display:inline-flex;align-items:center;gap:9px;transition:transform .2s,box-shadow .2s;cursor:pointer}
+  #dds-demo .btn-p{background:var(--grad);color:#06101c;box-shadow:0 8px 28px rgba(34,211,238,.28)}
+  #dds-demo .btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 38px rgba(139,92,246,.4)}
+  #dds-demo .btn-s{border:1px solid var(--line);color:var(--txt);background:rgba(16,26,46,.5)}
+  #dds-demo .btn-s:hover{border-color:rgba(34,211,238,.55);color:var(--cyan)}
+  #dds-demo .hero .note{text-align:center;font-size:13px;color:var(--muted)}
+  #dds-demo .hero-banner{margin:36px auto 0;max-width:860px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);box-shadow:0 26px 70px rgba(0,0,0,.5)}
+
+  #dds-demo .cdown{display:flex;gap:12px;justify-content:center;margin:30px 0 4px;flex-wrap:wrap}
+  #dds-demo .cd-cell{background:rgba(16,26,46,.7);border:1px solid var(--line);border-radius:14px;min-width:76px;padding:12px 8px;text-align:center}
+  #dds-demo .cd-num{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  #dds-demo .cd-lab{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  #dds-demo .cd-title{text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:12px}
+  #dds-demo .cd-title b{color:var(--cyan);font-weight:500}
+
+  /* ---------- Credibility strip ---------- */
+  #dds-demo .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2);padding:24px 0}
+  #dds-demo .strip .wrap{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:center;text-align:center}
+  #dds-demo .stat{display:flex;align-items:center;gap:8px;transition:transform .25s}
+  #dds-demo .stat:hover{transform:translateY(-3px)}
+  #dds-demo .stat .n{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#fff}
+  #dds-demo .stat .t{font-size:12.5px;color:var(--muted)}
+  #dds-demo .stat img{height:30px;width:auto}
+
+  /* ---------- Event photo gallery ---------- */
+  #dds-demo .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:38px}
+  #dds-demo .gal-item{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 50px rgba(0,0,0,.4);aspect-ratio:4/3}
+  #dds-demo .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease,filter .5s ease}
+  #dds-demo .gal-item:hover img{transform:scale(1.08);filter:brightness(1.05)}
+  #dds-demo .gal-cap{position:absolute;left:0;right:0;bottom:0;padding:16px 18px;background:linear-gradient(0deg,rgba(4,7,14,.92),transparent);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.06em;color:#fff;opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease}
+  #dds-demo .gal-item:hover .gal-cap{opacity:1;transform:translateY(0)}
+  @media(max-width:680px){#dds-demo .gallery{grid-template-columns:1fr}}
+
+  /* ---------- Key dates track ---------- */
+  #dds-demo .roadmap{background:var(--bg2)}
+  #dds-demo .track{position:relative;margin-top:38px}
+  #dds-demo .track::before{content:"";position:absolute;left:21px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--amber),var(--cyan) 40%,var(--violet))}
+  #dds-demo .day{position:relative;padding-left:64px;margin-bottom:18px}
+  #dds-demo .day .dot{position:absolute;left:8px;top:18px;width:28px;height:28px;border-radius:50%;background:var(--bg);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--cyan)}
+  #dds-demo .day-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 22px;transition:border-color .25s,transform .25s}
+  #dds-demo .day-card:hover{border-color:rgba(139,92,246,.5);transform:translateX(4px)}
+  #dds-demo .day-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:4px}
+  #dds-demo .day-head h3{font-size:16.5px}
+  #dds-demo .tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 10px;background:rgba(34,211,238,.12);color:var(--cyan);border:1px solid rgba(34,211,238,.35)}
+  #dds-demo .day p{font-size:13.5px;color:var(--muted)}
+
+  /* ---------- Prizes ---------- */
+  #dds-demo .prizes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:38px}
+  #dds-demo .prize{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px;text-align:center;position:relative;overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s}
+  #dds-demo .prize:hover{transform:translateY(-6px);box-shadow:0 22px 50px rgba(0,0,0,.45)}
+  #dds-demo .prize.first{border-color:rgba(245,196,81,.5);background:linear-gradient(180deg,rgba(245,196,81,.08),var(--panel) 60%)}
+  #dds-demo .prize.first:hover{border-color:rgba(245,196,81,.8);box-shadow:0 22px 55px rgba(245,166,35,.25)}
+  #dds-demo .prize .rank{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  #dds-demo .prize.first .rank{color:var(--gold)}
+  #dds-demo .prize .medal{font-size:34px;margin-bottom:8px;transition:transform .3s}
+  #dds-demo .prize:hover .medal{transform:scale(1.18) rotate(-6deg)}
+  #dds-demo .prize h3{font-size:17px;margin-bottom:8px}
+  #dds-demo .prize .val{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:8px}
+  #dds-demo .prize.first .val{background:var(--grad-gold);-webkit-background-clip:text;background-clip:text}
+  #dds-demo .prize p{font-size:13.5px;color:var(--muted)}
+  #dds-demo .prize-disclaim{text-align:center;font-size:12px;color:var(--muted);margin-top:20px;max-width:640px;margin-left:auto;margin-right:auto}
+
+  /* ---------- Cards ---------- */
+  #dds-demo .grid{display:grid;gap:16px;margin-top:30px}
+  #dds-demo .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  #dds-demo .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;transition:transform .25s,border-color .25s}
+  #dds-demo .card:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.4)}
+  #dds-demo .card h3{font-size:17px;margin:10px 0 8px}
+  #dds-demo .card p{font-size:14px;color:var(--muted)}
+  #dds-demo .card ul{list-style:none;display:grid;gap:6px;margin-top:6px}
+  #dds-demo .card li{font-size:13.5px;color:var(--muted);padding-left:18px;position:relative}
+  #dds-demo .card li::before{content:"▸";position:absolute;left:0;color:var(--violet)}
+  #dds-demo .ic{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(34,211,238,.16),rgba(139,92,246,.16));border:1px solid var(--line);font-size:18px}
+
+  #dds-demo .callout{margin:26px auto 0;max-width:760px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(139,92,246,.08));border:1px solid rgba(34,211,238,.25);border-radius:var(--radius);padding:20px 24px;font-size:14.5px;color:var(--txt)}
+  #dds-demo .callout b{color:var(--cyan)}
+
+  /* ---------- Testimonials marquee ---------- */
+  #dds-demo .testi{background:var(--bg2);overflow:hidden}
+  #dds-demo .tp-badge{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 16px;margin-top:6px}
+  #dds-demo .marquee{margin-top:34px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+  #dds-demo .m-track{display:flex;gap:18px;width:max-content;animation:dds-scroll 34s linear infinite}
+  #dds-demo .marquee:hover .m-track{animation-play-state:paused}
+  @keyframes dds-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  #dds-demo .t-card{flex:0 0 auto;width:320px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:transform .3s,border-color .3s,box-shadow .3s}
+  #dds-demo .t-card:hover{transform:translateY(-6px);border-color:rgba(245,196,81,.5);box-shadow:0 18px 40px rgba(0,0,0,.4)}
+  #dds-demo .t-stars{color:var(--gold);font-size:14px;margin-bottom:10px}
+  #dds-demo .t-card p{font-size:14px;color:var(--txt);margin-bottom:14px}
+  #dds-demo .t-who{display:flex;align-items:center;gap:10px}
+  #dds-demo .t-av{width:34px;height:34px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#06101c}
+  #dds-demo .t-name{font-size:13.5px;font-weight:600}
+  #dds-demo .t-loc{font-size:12px;color:var(--muted)}
+
+  /* ---------- Certificate + host combo ---------- */
+  #dds-demo .combo .wrap{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+  #dds-demo .combo-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;text-align:center;transition:transform .25s,border-color .25s,box-shadow .25s}
+  #dds-demo .combo-card:hover{transform:translateY(-6px);border-color:rgba(34,211,238,.45);box-shadow:0 20px 46px rgba(0,0,0,.4)}
+  #dds-demo .combo-card img.cert{border-radius:12px;border:1px solid var(--line);margin-bottom:14px}
+  #dds-demo .combo-card img.host{width:96px;height:96px;border-radius:50%;object-fit:cover;margin:0 auto 14px;border:2px solid var(--cyan)}
+  #dds-demo .combo-card h3{font-size:16px;margin-bottom:6px}
+  #dds-demo .combo-card p{font-size:13.5px;color:var(--muted)}
+  #dds-demo .combo-card .cpd-mini{height:34px;width:auto;margin:10px auto 0}
+  @media(max-width:700px){#dds-demo .combo .wrap{grid-template-columns:1fr}}
+
+  /* ---------- FAQ ---------- */
+  #dds-demo .faq-item{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-bottom:10px;overflow:hidden}
+  #dds-demo .faq-q{width:100%;text-align:left;background:none;border:none;color:var(--txt);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15.5px;padding:16px 48px 16px 20px;cursor:pointer;position:relative}
+  #dds-demo .faq-q::after{content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--cyan);transition:transform .25s}
+  #dds-demo .faq-item.open .faq-q::after{transform:translateY(-50%) rotate(45deg)}
+  #dds-demo .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  #dds-demo .faq-a p{padding:0 20px 18px;font-size:14px;color:var(--muted)}
+
+  /* ---------- Final CTA ---------- */
+  #dds-demo .final{background:
+    radial-gradient(800px 400px at 50% 100%,rgba(34,211,238,.16),transparent 65%),
+    radial-gradient(600px 340px at 80% 0%,rgba(139,92,246,.18),transparent 60%),var(--bg);
+    text-align:center;padding:84px 0}
+  #dds-demo .final h2{font-size:clamp(26px,4vw,38px);max-width:700px;margin:0 auto 14px}
+  #dds-demo .final .lead{margin:0 auto 22px}
+  #dds-demo .dl-chip{display:inline-block;border:1px solid var(--line);background:rgba(16,26,46,.7);border-radius:14px;padding:12px 24px;margin-bottom:22px}
+  #dds-demo .dl-chip .dl-lab{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:4px}
+  #dds-demo .dl-chip .dl-val{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;color:#fff}
+  #dds-demo .fineprint{margin-top:20px;font-size:12.5px;color:var(--muted);max-width:560px;margin-left:auto;margin-right:auto}
+  #dds-demo .signin-note{margin-top:16px;font-size:13px;color:var(--cyan);font-family:'JetBrains Mono',monospace}
+  #dds-demo .org-line{margin-top:40px;border-top:1px solid var(--line);padding-top:20px;font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+
+  #dds-demo .float-cta{display:none;position:fixed;left:14px;right:14px;bottom:14px;z-index:70}
+  #dds-demo .float-cta a{display:flex;justify-content:center;align-items:center;gap:8px;background:var(--grad);color:#06101c;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;padding:15px;border-radius:14px;box-shadow:0 12px 36px rgba(34,211,238,.4)}
+  @media(max-width:680px){
+    #dds-demo .float-cta{display:block}
+    #dds-demo section{padding:48px 0}
+    #dds-demo .hero{padding:40px 0 40px}
+  }
+</style>
+
+<div id="dds-demo">
+
+  <!-- ===== DEADLINE BAR ===== -->
+  <div class="urgency" id="ddsUrgency">
+    <span class="u-label">⚡ Submit by August 2, 11:45 PM GST</span>
+    <span class="u-clock" id="ddsMiniClock">--:--:--:--</span>
+    <a class="u-btn" href="#dds-apply">Join the Challenge →</a>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="brandrow rv">
+        <img src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/DDS%20HIGH%20RES%20Logo%20%20copywhite.png" alt="Decoding Data Science logo" loading="lazy">
+      </div>
+      <div class="badges rv">
+        <span class="badge hot">Free · Solo Challenge</span>
+        <span class="badge">$4,250 in Winner Prizes</span>
+        <span class="badge glow">🌍 Visibility &amp; Opportunity</span>
+      </div>
+      <h1 class="rv">The <span class="gx">Agentic AI Demo Challenge</span></h1>
+      <p class="sub rv">For students, freelancers, and experienced developers looking for their next opportunity — build a working agentic AI application, solo, and get the chance to demo it. Online on August 4, live in Dubai on August 6, where the winners are announced.</p>
+
+      <div class="cta-row rv">
+        <a class="btn btn-p" href="#dds-apply">Join the Challenge →</a>
+        <a class="btn btn-s" href="#dds-dates">See the Key Dates</a>
+      </div>
+      <p class="note rv">Sign-up is simple, free, and part of the DDS community.</p>
+
+      <div class="cdown rv" id="ddsCdown">
+        <div class="cd-cell"><div class="cd-num" id="cdD">--</div><div class="cd-lab">Days</div></div>
+        <div class="cd-cell"><div class="cd-num" id="cdH">--</div><div class="cd-lab">Hours</div></div>
+        <div class="cd-cell"><div class="cd-num" id="cdM">--</div><div class="cd-lab">Minutes</div></div>
+        <div class="cd-cell"><div class="cd-num" id="cdS">--</div><div class="cd-lab">Seconds</div></div>
+      </div>
+      <div class="cd-title rv">Until submissions close — <b>August 2, 11:45 PM GST</b></div>
+
+      <div class="hero-banner rv">
+        <img src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/WhatsApp%20Image%202026-07-03%20at%2012.21.12%20PM%20(4).jpeg" alt="Participants at a previous Decoding Data Science physical event in Dubai" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CREDIBILITY STRIP ===== -->
+  <div class="strip">
+    <div class="wrap rv">
+      <div class="stat"><span class="n">194K+</span><span class="t">community</span></div>
+      <div class="stat"><span class="n">1,000+</span><span class="t">events hosted</span></div>
+      <!-- CHANGE-ME: swap for the "CPD Verified" logo once you send the URL — using CPD Member logo as fallback -->
+      <div class="stat"><img src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/TCPDS%20CERTIFIED%20-%20JPEG%20Pantone%202593%202015.jpg" alt="CPD Verified logo" loading="lazy"><span class="t">CPD Verified</span></div>
+    </div>
+  </div>
+
+  <!-- ===== EVENT PHOTOS ===== -->
+  <section>
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">From Our Community</div>
+        <h2>Inside a DDS physical event</h2>
+        <p class="lead">A look at builders, mentors, and finalists from a previous Decoding Data Science physical demo day.</p>
+      </div>
+      <div class="gallery rv">
+        <div class="gal-item">
+          <img src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/WhatsApp%20Image%202026-07-03%20at%209.23.48%20AM%20(1).jpeg" alt="DDS physical event — participants and mentors" loading="lazy">
+          <div class="gal-cap">Live demo day — Dubai</div>
+        </div>
+        <div class="gal-item">
+          <img src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/IMG-20260702-WA0027.jpg" alt="DDS physical event — community and finalists" loading="lazy">
+          <div class="gal-cap">Community &amp; finalists on stage</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== KEY DATES ===== -->
+  <section class="roadmap" id="dds-dates">
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">Key Dates</div>
+        <h2>Sharp and simple — four moments</h2>
+      </div>
+      <div class="track">
+        <div class="day rv">
+          <div class="dot">1</div>
+          <div class="day-card">
+            <div class="day-head"><h3>Announcement + live Q&amp;A</h3><span class="tag">July 16</span></div>
+            <p>We announce the challenge and take any open questions — no submission or demo happens on this day.</p>
+          </div>
+        </div>
+        <div class="day rv">
+          <div class="dot">2</div>
+          <div class="day-card">
+            <div class="day-head"><h3>Submissions close</h3><span class="tag">August 2 · 11:45 PM GST</span></div>
+            <p>Final deadline to submit your project. A weekend to finish strong before the cutoff.</p>
+          </div>
+        </div>
+        <div class="day rv">
+          <div class="dot">3</div>
+          <div class="day-card">
+            <div class="day-head"><h3>Online demo day</h3><span class="tag">August 4</span></div>
+            <p>Shortlisted participants demo their projects online for the judging panel.</p>
+          </div>
+        </div>
+        <div class="day rv">
+          <div class="dot">4</div>
+          <div class="day-card">
+            <div class="day-head"><h3>Physical demo + winners</h3><span class="tag">August 6 · Dubai</span></div>
+            <p>Finalists demo live in Dubai. Winners are announced the same day.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRIZES ===== -->
+  <section>
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">Prizes</div>
+        <h2>What winners take home</h2>
+        <p class="lead">Certification and program access are winner's rewards, not automatic for every participant — this is what you're building toward. Combined prize value: <b style="color:var(--gold)">$4,250</b>.</p>
+      </div>
+      <div class="prizes rv">
+        <div class="prize first">
+          <div class="rank">1st Place</div>
+          <div class="medal">🥇</div>
+          <h3>CAIO Program + JetBrains License</h3>
+          <div class="val">Worth $1,750</div>
+          <p>Full access to the CAIO Program ($1,000 value — includes a 1-month AI Accelerator Bootcamp seat with certificate) plus a JetBrains All Products License ($750 value).</p>
+        </div>
+        <div class="prize">
+          <div class="rank">2nd Place</div>
+          <div class="medal">🥈</div>
+          <h3>AI for Builders Program</h3>
+          <div class="val">Worth $1,500</div>
+          <p>Full access to the AI for Builders Program, including a CPD-backed certificate.</p>
+        </div>
+        <div class="prize">
+          <div class="rank">3rd Place</div>
+          <div class="medal">🥉</div>
+          <h3>CAIO Program</h3>
+          <div class="val">Worth $1,000</div>
+          <p>Full access to the CAIO Program, which includes the AI for Builders track and a certificate.</p>
+        </div>
+      </div>
+      <p class="prize-disclaim rv">Combined value across all three winners: <b style="color:var(--txt)">$4,250</b> ($1,750 + $1,500 + $1,000). Rewards are for winning placements, not automatic for all participants. Every participant still gets the chance to demo, panel feedback, and visibility. Rewards subject to eligibility, project quality, submission completion, and final review.</p>
+    </div>
+  </section>
+
+  <!-- ===== WHO + HOW TO JOIN ===== -->
+  <section style="background:var(--bg2)" id="dds-apply">
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">How to Join</div>
+        <h2>Solo challenge. Just a few details.</h2>
+        <p class="lead">One person, one project. Sign-up is simple, free, and part of the DDS community — no long forms.</p>
+      </div>
+      <div class="grid g2 rv">
+        <div class="card">
+          <div class="ic">🎯</div>
+          <h3>Who It's For</h3>
+          <ul>
+            <li>Students building their first real project</li>
+            <li>Freelancers looking to show proof of work</li>
+            <li>Experienced developers exploring agentic AI</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="ic">📝</div>
+          <h3>What You'll Share</h3>
+          <ul>
+            <li>Your name and email</li>
+            <li>Working project / deployed link</li>
+            <li>GitHub repository link</li>
+            <li>Recorded demo — optional, not required</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout rv">
+        <b>Already built something in a past DDS challenge?</b> You're welcome to bring it back — improved, redeployed, or as-is.
+      </div>
+
+      <div class="callout rv" style="border-color:rgba(245,166,35,.35);background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(245,196,81,.06))">
+        🎁 <b style="color:var(--amber)">Early Bird Bonus:</b> Complete Day 0 before July 16 and get free access to our <b style="color:var(--amber)">Python Certification Course — a $400 value, on us.</b> Gone once July 16 hits, so don't wait.
+      </div>
+
+      <div class="callout rv">
+        💬 <b>Stay connected:</b> Everyone who joins gets added to an exclusive WhatsApp group for updates and questions — plus live workshops during the challenge. Bring your questions to the July 16 Q&amp;A too.
+      </div>
+
+      <div class="cta-row rv" style="margin-top:30px">
+        <a class="btn btn-p" href="https://nas.com/artificialintelligence/challenges/agentic-ai-demo-challenge" target="_blank" rel="noopener">Join the Challenge →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testi">
+    <div class="wrap center rv">
+      <div class="kicker">Social Proof</div>
+      <h2>What our community says</h2>
+      <div class="tp-badge">⭐ <b>4.8 / 5.0</b> on Trustpilot &nbsp;·&nbsp; 100+ reviews</div>
+    </div>
+    <div class="marquee rv">
+      <div class="m-track" id="ddsMarquee">
+        <div class="t-card">
+          <div class="t-stars">★★★★★</div>
+          <p>"I recently completed the 3-day AI Accelerator Bootcamp and it was an incredible experience. The hands-on project implementation turned theory into practice immediately."</p>
+          <div class="t-who"><div class="t-av">AJ</div><div><div class="t-name">AJ</div><div class="t-loc">United States · Bootcamp Graduate</div></div></div>
+        </div>
+        <div class="t-card">
+          <div class="t-stars">★★★★★</div>
+          <p>"Decoding Data Science gave me an excellent stage to start."</p>
+          <div class="t-who"><div class="t-av">SR</div><div><div class="t-name">S.M. Raji</div><div class="t-loc">Trustpilot Review</div></div></div>
+        </div>
+        <div class="t-card">
+          <div class="t-stars">★★★★★</div>
+          <p>"I gained hands-on experience using LLMs and RAG."</p>
+          <div class="t-who"><div class="t-av">SR</div><div><div class="t-name">Samer R.</div><div class="t-loc">Trustpilot Review</div></div></div>
+        </div>
+        <!-- duplicate set for seamless marquee loop -->
+        <div class="t-card">
+          <div class="t-stars">★★★★★</div>
+          <p>"I recently completed the 3-day AI Accelerator Bootcamp and it was an incredible experience. The hands-on project implementation turned theory into practice immediately."</p>
+          <div class="t-who"><div class="t-av">AJ</div><div><div class="t-name">AJ</div><div class="t-loc">United States · Bootcamp Graduate</div></div></div>
+        </div>
+        <div class="t-card">
+          <div class="t-stars">★★★★★</div>
+          <p>"Decoding Data Science gave me an excellent stage to start."</p>
+          <div class="t-who"><div class="t-av">SR</div><div><div class="t-name">S.M. Raji</div><div class="t-loc">Trustpilot Review</div></div></div>
+        </div>
+        <div class="t-card">
+          <div class="t-stars">★★★★★</div>
+          <p>"I gained hands-on experience using LLMs and RAG."</p>
+          <div class="t-who"><div class="t-av">SR</div><div><div class="t-name">Samer R.</div><div class="t-loc">Trustpilot Review</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CERTIFICATE + HOST (compact combo) ===== -->
+  <section class="combo" style="background:var(--bg2)">
+    <div class="wrap rv">
+      <div class="combo-card">
+        <!-- CHANGE-ME: swap for the new CPD certificate image once you send the URL -->
+        <img class="cert" src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/Worod%20AI%20Accelerator%20Jul.png" alt="Decoding Data Science certificate sample" loading="lazy">
+        <h3>A Winner's Certificate</h3>
+        <p>Top 3 placements win full program access (CAIO or AI for Builders) with a CPD-backed certificate — $4,250 in combined prize value across all three winners.</p>
+        <img class="cpd-mini" src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/TCPDS%20CERTIFIED%20-%20JPEG%20Pantone%202593%202015.jpg" alt="CPD Verified logo" loading="lazy">
+      </div>
+      <div class="combo-card">
+        <img class="host" src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/Arshad_photo.png" alt="Mohammad Arshad, Founder of Decoding Data Science" loading="lazy">
+        <h3>Mohammad Arshad</h3>
+        <p>Founder &amp; CEO of Decoding Data Science — 21 years of industry experience in data, AI &amp; technology leadership, with prior roles at Majid Al Futtaim, Nakheel, Accenture, HP, and Dell. He's built DDS into a 194K+ member AI education ecosystem, hosting 1,000+ events and training thousands of builders across the region and beyond.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section>
+    <div class="wrap" style="max-width:760px">
+      <div class="center rv">
+        <div class="kicker">FAQ</div>
+        <h2>Quick answers</h2>
+      </div>
+      <div style="margin-top:28px" class="rv" id="ddsFaq">
+        <div class="faq-item"><button class="faq-q">Is this challenge free?</button><div class="faq-a"><p>Yes — completely free to join, and sign-up is simple as part of the DDS community.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Does every participant get a certificate?</button><div class="faq-a"><p>No — full program access and certificates go to the top 3 winners ($4,250 combined prize value). Every participant still gets the chance to demo and receive panel feedback.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Is a recorded demo video required?</button><div class="faq-a"><p>No — it's optional. A working project link and GitHub repo are what matter most.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Can I join as a team?</button><div class="faq-a"><p>No — this challenge is solo only, one person per project.</p></div></div>
+        <div class="faq-item"><button class="faq-q">What happens on July 16?</button><div class="faq-a"><p>It's an announcement and open Q&amp;A session — not a deadline or a demo. Come with your questions.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Does submitting guarantee a demo slot?</button><div class="faq-a"><p>No — submissions are reviewed, and shortlisted projects are invited to demo online on August 4 and in Dubai on August 6.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Are prizes guaranteed?</button><div class="faq-a"><p>Rewards and opportunities are subject to eligibility, partner approval, project quality, submission completion, and final review.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FINAL CTA ===== -->
+  <section class="final">
+    <div class="wrap">
+      <div class="rv">
+        <h2>Build it. Submit it. Demo it.</h2>
+        <p class="lead">A free, solo challenge — build a working agentic AI application for a chance to demo online on August 4 and live in Dubai on August 6.</p>
+        <div class="dl-chip"><div class="dl-lab">Submission Deadline</div><div class="dl-val">August 2 · 11:45 PM GST</div></div>
+        <br>
+        <a class="btn btn-p" style="font-size:18px;padding:18px 40px" href="https://nas.com/artificialintelligence/challenges/agentic-ai-demo-challenge" target="_blank" rel="noopener">Join the Challenge →</a>
+        <p class="fineprint">Join the announcement &amp; Q&amp;A on July 16. Winners are announced live at the August 6 event in Dubai.</p>
+        <p class="signin-note">✓ Simple, free sign-up — part of the DDS community</p>
+        <div class="org-line">Decoding Data Science · AI Guild · DDS Academy — © 2026 Decoding Data Science</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="float-cta">
+    <a href="#dds-apply">⚡ Join — closes <span id="ddsFloatClock">--:--</span></a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var mini=document.getElementById('ddsMiniClock'),
+      fl=document.getElementById('ddsFloatClock');
+
+  var DL=new Date('2026-08-02T23:45:00+04:00').getTime(); // single deadline, GST = UTC+4
+
+  function pad(n){return (n<10?'0':'')+n}
+  function tick(){
+    var now=Date.now(), d=Math.max(0,DL-now);
+    var dd=Math.floor(d/864e5), hh=Math.floor(d%864e5/36e5), mm=Math.floor(d%36e5/6e4), ss=Math.floor(d%6e4/1e3);
+    if(d<=0){
+      if(mini) mini.textContent='Closed';
+      if(fl) fl.textContent='Closed';
+    } else {
+      if(mini) mini.textContent=pad(dd)+'d '+pad(hh)+':'+pad(mm)+':'+pad(ss);
+      if(fl) fl.textContent=pad(hh)+':'+pad(mm)+':'+pad(ss);
+    }
+    var el=function(id){return document.getElementById(id)};
+    if(el('cdD')){el('cdD').textContent=pad(dd);el('cdH').textContent=pad(hh);el('cdM').textContent=pad(mm);el('cdS').textContent=pad(ss);}
+  }
+  tick(); setInterval(tick,1000);
+
+  document.querySelectorAll('#ddsFaq .faq-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      var item=q.parentElement, a=item.querySelector('.faq-a'), open=item.classList.contains('open');
+      document.querySelectorAll('#ddsFaq .faq-item.open').forEach(function(o){
+        o.classList.remove('open'); o.querySelector('.faq-a').style.maxHeight=null;
+      });
+      if(!open){ item.classList.add('open'); a.style.maxHeight=a.scrollHeight+'px'; }
+    });
+  });
+
+  document.querySelectorAll('#dds-demo a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var href=a.getAttribute('href');
+      if(href==='#') return;
+      var t=document.querySelector(href);
+      if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
+    });
+  });
+
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+    },{threshold:.12});
+    document.querySelectorAll('#dds-demo .rv').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('#dds-demo .rv').forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+</script>
