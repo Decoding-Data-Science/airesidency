@@ -1,0 +1,756 @@
+<!-- ============================================================
+  Decoding Data Science — AI Accelerator Bootcamp 5th Edition
+  Participant Guide & FAQ
+  Single-file landing page. Paste into a WordPress Custom HTML block.
+  ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ---------- Scope everything under #dds-bootcamp ---------- */
+  #dds-bootcamp{
+    --bg:#070b14; --bg2:#0d1424; --panel:#101a2e; --line:rgba(140,170,220,.14);
+    --cyan:#22d3ee; --violet:#8b5cf6; --amber:#f5a623;
+    --txt:#e7edf7; --muted:#94a3bd;
+    --grad:linear-gradient(92deg,#22d3ee 0%,#8b5cf6 100%);
+    --radius:16px;
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg); color:var(--txt);
+    line-height:1.6; font-size:16px;
+    margin:0; overflow-x:hidden;
+  }
+  #dds-bootcamp *,#dds-bootcamp *::before,#dds-bootcamp *::after{box-sizing:border-box;margin:0;padding:0}
+  #dds-bootcamp img{max-width:100%;display:block}
+  #dds-bootcamp a{text-decoration:none;color:inherit}
+  #dds-bootcamp .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  #dds-bootcamp section{padding:72px 0;position:relative}
+  #dds-bootcamp h1,#dds-bootcamp h2,#dds-bootcamp h3{font-family:'Space Grotesk',sans-serif;line-height:1.15;letter-spacing:-.01em}
+  #dds-bootcamp h2{font-size:clamp(28px,4vw,40px);margin-bottom:14px}
+  #dds-bootcamp .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);display:inline-flex;align-items:center;gap:8px;margin-bottom:14px}
+  #dds-bootcamp .kicker::before{content:"";width:22px;height:1px;background:var(--cyan)}
+  #dds-bootcamp .lead{color:var(--muted);font-size:17px;max-width:680px}
+  #dds-bootcamp .center{text-align:center}
+  #dds-bootcamp .center .lead{margin:0 auto}
+
+  /* ---------- Reveal ---------- */
+  #dds-bootcamp .rv{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+  #dds-bootcamp .rv.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    #dds-bootcamp .rv{opacity:1;transform:none;transition:none}
+    #dds-bootcamp *{animation:none!important;transition:none!important}
+  }
+
+  /* ---------- Urgency timer ---------- */
+  #dds-bootcamp .urgency{position:sticky;top:0;z-index:60;background:rgba(7,11,20,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:center;text-align:center}
+  #dds-bootcamp .urgency .u-label{font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.06em;color:var(--amber);text-transform:uppercase}
+  #dds-bootcamp .u-clock{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:20px;color:#fff;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.4);border-radius:8px;padding:2px 12px;min-width:96px}
+  #dds-bootcamp .u-btn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;background:var(--grad);color:#06101c;border-radius:999px;padding:7px 18px;transition:transform .2s,box-shadow .2s;white-space:nowrap}
+  #dds-bootcamp .u-btn:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(34,211,238,.35)}
+
+  /* ---------- Hero ---------- */
+  #dds-bootcamp .hero{padding:84px 0 64px;background:
+    radial-gradient(900px 480px at 80% -10%,rgba(139,92,246,.22),transparent 60%),
+    radial-gradient(700px 420px at 8% 12%,rgba(34,211,238,.14),transparent 60%),
+    var(--bg)}
+  #dds-bootcamp .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:linear-gradient(rgba(140,170,220,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(140,170,220,.05) 1px,transparent 1px);
+    background-size:44px 44px;mask-image:radial-gradient(600px 380px at 50% 0%,#000 30%,transparent 75%)}
+  #dds-bootcamp .hero .wrap{position:relative;z-index:1}
+  #dds-bootcamp .badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:26px}
+  #dds-bootcamp .badge{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.05em;border:1px solid var(--line);border-radius:999px;padding:5px 13px;color:var(--muted);background:rgba(16,26,46,.6)}
+  #dds-bootcamp .badge.hot{border-color:rgba(34,211,238,.5);color:var(--cyan)}
+  #dds-bootcamp .badge.live{border-color:rgba(245,166,35,.5);color:var(--amber)}
+  #dds-bootcamp .badge.live::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--amber);margin-right:7px;animation:dds-bp 1.6s infinite}
+  @keyframes dds-bp{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,.5)}50%{box-shadow:0 0 0 6px rgba(245,166,35,0)}}
+  #dds-bootcamp .hero h1{font-size:clamp(34px,5.6vw,60px);text-align:center;max-width:880px;margin:0 auto 18px;font-weight:700}
+  #dds-bootcamp .hero h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  #dds-bootcamp .hero .sub{text-align:center;color:var(--muted);max-width:720px;margin:0 auto 30px;font-size:17.5px}
+  #dds-bootcamp .cta-row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:14px}
+  #dds-bootcamp .btn{font-family:'Space Grotesk',sans-serif;font-weight:600;border-radius:12px;padding:15px 30px;font-size:16px;display:inline-flex;align-items:center;gap:9px;transition:transform .2s,box-shadow .2s;cursor:pointer}
+  #dds-bootcamp .btn-p{background:var(--grad);color:#06101c;box-shadow:0 8px 28px rgba(34,211,238,.28)}
+  #dds-bootcamp .btn-p:hover{transform:translateY(-2px);box-shadow:0 14px 38px rgba(139,92,246,.4)}
+  #dds-bootcamp .btn-s{border:1px solid var(--line);color:var(--txt);background:rgba(16,26,46,.5)}
+  #dds-bootcamp .btn-s:hover{border-color:rgba(34,211,238,.55);color:var(--cyan)}
+  #dds-bootcamp .hero .note{text-align:center;font-size:13px;color:var(--muted)}
+
+  /* ---------- Countdown ---------- */
+  #dds-bootcamp .cdown{display:flex;gap:12px;justify-content:center;margin:34px 0 0;flex-wrap:wrap}
+  #dds-bootcamp .cd-cell{background:rgba(16,26,46,.7);border:1px solid var(--line);border-radius:14px;min-width:84px;padding:14px 10px;text-align:center}
+  #dds-bootcamp .cd-num{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  #dds-bootcamp .cd-lab{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+  #dds-bootcamp .cd-title{text-align:center;font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:30px}
+  #dds-bootcamp .cd-title b{color:var(--cyan);font-weight:500}
+
+  /* ---------- Strip ---------- */
+  #dds-bootcamp .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2);padding:34px 0}
+  #dds-bootcamp .strip .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:22px;align-items:center}
+  #dds-bootcamp .stat{text-align:center}
+  #dds-bootcamp .stat .n{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:#fff}
+  #dds-bootcamp .stat .t{font-size:13px;color:var(--muted)}
+  #dds-bootcamp .stat img{height:64px;width:auto;margin:0 auto 6px;filter:drop-shadow(0 0 8px rgba(34,211,238,.15))}
+
+  /* ---------- Cards ---------- */
+  #dds-bootcamp .grid{display:grid;gap:18px;margin-top:38px}
+  #dds-bootcamp .g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  #dds-bootcamp .g2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+  #dds-bootcamp .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px;transition:transform .25s,border-color .25s,box-shadow .25s}
+  #dds-bootcamp .card:hover{transform:translateY(-5px);border-color:rgba(34,211,238,.45);box-shadow:0 18px 44px rgba(0,0,0,.4)}
+  #dds-bootcamp .card h3{font-size:18px;margin:12px 0 8px}
+  #dds-bootcamp .card p{font-size:14.5px;color:var(--muted)}
+  #dds-bootcamp .ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(34,211,238,.16),rgba(139,92,246,.16));border:1px solid var(--line);font-size:19px}
+
+  /* ---------- Roadmap ---------- */
+  #dds-bootcamp .roadmap{background:var(--bg2)}
+  #dds-bootcamp .track{position:relative;margin-top:46px}
+  #dds-bootcamp .track::before{content:"";position:absolute;left:21px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--amber),var(--cyan) 18%,var(--violet))}
+  #dds-bootcamp .day{position:relative;padding-left:64px;margin-bottom:22px}
+  #dds-bootcamp .day .dot{position:absolute;left:8px;top:22px;width:28px;height:28px;border-radius:50%;background:var(--bg);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--cyan)}
+  #dds-bootcamp .day.live .dot{border-color:var(--amber);color:var(--amber);animation:dds-bp 1.8s infinite}
+  #dds-bootcamp .day-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;transition:border-color .25s,transform .25s}
+  #dds-bootcamp .day-card:hover{border-color:rgba(139,92,246,.5);transform:translateX(4px)}
+  #dds-bootcamp .day.live .day-card{border-color:rgba(245,166,35,.45);background:linear-gradient(135deg,rgba(245,166,35,.07),var(--panel) 45%)}
+  #dds-bootcamp .day-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:6px}
+  #dds-bootcamp .day-head h3{font-size:17.5px}
+  #dds-bootcamp .tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 10px}
+  #dds-bootcamp .tag.started{background:rgba(245,166,35,.14);color:var(--amber);border:1px solid rgba(245,166,35,.4)}
+  #dds-bootcamp .tag.date{background:rgba(34,211,238,.12);color:var(--cyan);border:1px solid rgba(34,211,238,.35)}
+  #dds-bootcamp .day-goal{font-size:13.5px;color:var(--cyan);font-family:'JetBrains Mono',monospace;margin-bottom:10px}
+  #dds-bootcamp .day ul{list-style:none;display:grid;gap:6px}
+  #dds-bootcamp .day li{font-size:14px;color:var(--muted);padding-left:20px;position:relative}
+  #dds-bootcamp .day li::before{content:"▸";position:absolute;left:0;color:var(--violet)}
+
+  /* ---------- Checklist ---------- */
+  #dds-bootcamp .checklist{list-style:none;display:grid;gap:12px;margin-top:30px;max-width:780px}
+  #dds-bootcamp .checklist li{display:flex;align-items:flex-start;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 22px;font-size:15px;transition:border-color .25s}
+  #dds-bootcamp .checklist li:hover{border-color:rgba(34,211,238,.4)}
+  #dds-bootcamp .checklist .ck-icon{flex:0 0 auto;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+  #dds-bootcamp .checklist .ck-do{background:rgba(34,211,238,.15);color:var(--cyan);border:1px solid rgba(34,211,238,.3)}
+  #dds-bootcamp .checklist .ck-no{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+  #dds-bootcamp .checklist .ck-text b{color:var(--txt)}
+  #dds-bootcamp .checklist .ck-text{color:var(--muted)}
+
+  /* ---------- Deliverable template ---------- */
+  #dds-bootcamp .template-grid{display:grid;gap:14px;margin-top:36px;counter-reset:tpl}
+  #dds-bootcamp .tpl-item{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;counter-increment:tpl;position:relative}
+  #dds-bootcamp .tpl-item::before{content:"0" counter(tpl);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--cyan);position:absolute;top:22px;right:22px}
+  #dds-bootcamp .tpl-item h3{font-size:16.5px;margin-bottom:6px}
+  #dds-bootcamp .tpl-item p{font-size:14px;color:var(--muted)}
+  #dds-bootcamp .tpl-item .example{margin-top:10px;font-size:13.5px;color:var(--cyan);font-family:'JetBrains Mono',monospace;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.2);border-radius:10px;padding:12px 16px;line-height:1.55}
+
+  /* ---------- Schedule ---------- */
+  #dds-bootcamp .sched{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:36px}
+  #dds-bootcamp .sched-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;text-align:center;transition:transform .25s,border-color .25s}
+  #dds-bootcamp .sched-card:hover{transform:translateY(-4px);border-color:rgba(139,92,246,.5)}
+  #dds-bootcamp .sched-card .s-day{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+  #dds-bootcamp .sched-card .s-date{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:#fff}
+  #dds-bootcamp .sched-card .s-time{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--cyan);margin:6px 0 10px}
+  #dds-bootcamp .sched-card .s-topic{font-size:14.5px;color:var(--muted)}
+
+  /* ---------- Links grid ---------- */
+  #dds-bootcamp .link-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:34px}
+  #dds-bootcamp .link-card{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;transition:border-color .25s,transform .25s}
+  #dds-bootcamp .link-card:hover{border-color:rgba(34,211,238,.5);transform:translateY(-2px)}
+  #dds-bootcamp .link-card .lk-ic{flex:0 0 auto;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(34,211,238,.16),rgba(139,92,246,.16));border:1px solid var(--line);font-size:17px}
+  #dds-bootcamp .link-card .lk-title{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;color:var(--txt)}
+  #dds-bootcamp .link-card .lk-desc{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+  /* ---------- Certificate ---------- */
+  #dds-bootcamp .cert .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+  #dds-bootcamp .cert-img{border-radius:var(--radius);border:1px solid var(--line);overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45);transition:transform .3s}
+  #dds-bootcamp .cert-img:hover{transform:scale(1.015)}
+  #dds-bootcamp .cpd-row{display:flex;align-items:center;gap:16px;margin-top:24px}
+  #dds-bootcamp .cpd-row img{height:74px;width:auto}
+  #dds-bootcamp .cpd-row p{font-size:13.5px;color:var(--muted)}
+  @media(max-width:820px){#dds-bootcamp .cert .wrap{grid-template-columns:1fr}}
+
+  /* ---------- Host ---------- */
+  #dds-bootcamp .host .wrap{display:grid;grid-template-columns:300px 1fr;gap:46px;align-items:center}
+  #dds-bootcamp .host-photo{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);box-shadow:0 20px 56px rgba(0,0,0,.45)}
+  #dds-bootcamp .host-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  @media(max-width:820px){#dds-bootcamp .host .wrap{grid-template-columns:1fr;justify-items:center;text-align:center}
+    #dds-bootcamp .host-photo{max-width:280px}
+    #dds-bootcamp .host-meta{justify-content:center}}
+
+  /* ---------- FAQ ---------- */
+  #dds-bootcamp .faq-item{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-bottom:12px;overflow:hidden}
+  #dds-bootcamp .faq-q{width:100%;text-align:left;background:none;border:none;color:var(--txt);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;padding:18px 52px 18px 22px;cursor:pointer;position:relative}
+  #dds-bootcamp .faq-q::after{content:"+";position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--cyan);transition:transform .25s}
+  #dds-bootcamp .faq-item.open .faq-q::after{transform:translateY(-50%) rotate(45deg)}
+  #dds-bootcamp .faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+  #dds-bootcamp .faq-a p{padding:0 22px 20px;font-size:14.5px;color:var(--muted)}
+
+  /* ---------- Final CTA ---------- */
+  #dds-bootcamp .final{background:
+    radial-gradient(800px 420px at 50% 100%,rgba(34,211,238,.16),transparent 65%),
+    radial-gradient(600px 360px at 80% 0%,rgba(139,92,246,.18),transparent 60%),var(--bg);
+    text-align:center;padding:96px 0}
+  #dds-bootcamp .final h2{font-size:clamp(30px,4.6vw,46px);max-width:760px;margin:0 auto 16px}
+  #dds-bootcamp .final .lead{margin:0 auto 32px}
+  #dds-bootcamp .fineprint{margin-top:22px;font-size:12.5px;color:var(--muted)}
+  #dds-bootcamp .org-line{margin-top:46px;border-top:1px solid var(--line);padding-top:22px;font-size:13px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em}
+
+  /* ---------- Floating mobile CTA ---------- */
+  #dds-bootcamp .float-cta{display:none;position:fixed;left:14px;right:14px;bottom:14px;z-index:70}
+  #dds-bootcamp .float-cta a{display:flex;justify-content:center;align-items:center;gap:8px;background:var(--grad);color:#06101c;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15.5px;padding:15px;border-radius:14px;box-shadow:0 12px 36px rgba(34,211,238,.4)}
+  @media(max-width:680px){
+    #dds-bootcamp .float-cta{display:block}
+    #dds-bootcamp section{padding:56px 0}
+    #dds-bootcamp .hero{padding:60px 0 48px}
+    #dds-bootcamp .u-clock{font-size:17px}
+  }
+
+  /* ---------- Video embed ---------- */
+  #dds-bootcamp .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:var(--radius);border:1px solid var(--line);margin-top:36px;box-shadow:0 20px 60px rgba(0,0,0,.45)}
+  #dds-bootcamp .video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+
+  /* ---------- Callout ---------- */
+  #dds-bootcamp .callout{margin:34px auto 0;max-width:760px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(139,92,246,.08));border:1px solid rgba(34,211,238,.25);border-radius:var(--radius);padding:22px 26px;font-size:15px;color:var(--txt)}
+  #dds-bootcamp .callout b{color:var(--cyan)}
+  #dds-bootcamp .callout.warn{border-color:rgba(245,166,35,.4);background:linear-gradient(135deg,rgba(245,166,35,.08),rgba(139,92,246,.06))}
+  #dds-bootcamp .callout.warn b{color:var(--amber)}
+</style>
+
+<div id="dds-bootcamp">
+
+  <!-- ===== STICKY NAV BAR ===== -->
+  <div class="urgency" id="ddsUrgency">
+    <span class="u-label">⚡ AI Accelerator Bootcamp · 5th Edition · Internal Participant Guide</span>
+    <a class="u-btn" href="#dds-schedule">View Schedule →</a>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="badges rv">
+        <span class="badge hot">5th Edition</span>
+        <span class="badge live">Now Live</span>
+        <span class="badge">July 24–26, 2026</span>
+        <span class="badge hot">CPD Certified · 10 CPD Hours</span>
+        <span class="badge">3 Live Masterclasses</span>
+        <span class="badge">Internal Guide</span>
+      </div>
+
+      <h1 class="rv">AI Accelerator Bootcamp — <span class="gx">Participant Guide</span></h1>
+      <p class="sub rv">Everything you need to know to go from AI Curious to AI Builder in one weekend. Your complete guide to the bootcamp structure, project, schedule, deliverables, and resources.</p>
+
+      <div class="cta-row rv">
+        <a class="btn btn-p" href="#dds-schedule">View Schedule &amp; Register →</a>
+        <a class="btn btn-s" href="#dds-roadmap">See the Roadmap</a>
+      </div>
+      <p class="note rv">All sessions recorded · Live attendance strongly recommended · Register for each session individually below</p>
+
+      <div class="cd-title rv">Submission deadline — <b>Sunday, July 26, 2026 · 11:45 PM GST</b></div>
+      <div class="cdown rv" id="ddsCountdown">
+        <div class="cd-cell"><div class="cd-num" id="cdD">--</div><div class="cd-lab">Days</div></div>
+        <div class="cd-cell"><div class="cd-num" id="cdH">--</div><div class="cd-lab">Hours</div></div>
+        <div class="cd-cell"><div class="cd-num" id="cdM">--</div><div class="cd-lab">Minutes</div></div>
+        <div class="cd-cell"><div class="cd-num" id="cdS">--</div><div class="cd-lab">Seconds</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CREDIBILITY STRIP ===== -->
+  <div class="strip">
+    <div class="wrap rv">
+      <div class="stat"><div class="n">1,000+</div><div class="t">Events hosted</div></div>
+      <div class="stat"><div class="n">194K+</div><div class="t">Community members</div></div>
+      <div class="stat"><div class="n">50+</div><div class="t">Countries represented</div></div>
+      <div class="stat"><div class="n">3 Days</div><div class="t">Hands-on building</div></div>
+      <div class="stat">
+        <img src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/cpdmember-logo-1-300x275.webp" alt="CPD Member logo" loading="lazy">
+        <div class="t">CPD Approved Provider</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== INTRO VIDEO ===== -->
+  <section>
+    <div class="wrap center rv">
+      <div class="kicker">Watch First</div>
+      <h2>Bootcamp Overview Video</h2>
+      <p class="lead">Start here. Watch the introductory video to understand the full bootcamp journey before diving in.</p>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/LiW91sdNUIk" title="AI Accelerator Bootcamp Introduction" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== THE PROJECT ===== -->
+  <section style="background:var(--bg2)">
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">The Project</div>
+        <h2>DDS HR Enterprise Chatbot</h2>
+        <p class="lead">Everyone in this bootcamp will build the same project — an HR Policy Chatbot that answers employee questions using real HR policy documents.</p>
+      </div>
+      <div class="grid g3">
+        <div class="card rv"><div class="ic">🎯</div><h3>The Problem</h3><p>Employees struggle to find HR policy information. Important details about leave, benefits, onboarding, and company rules are buried in long PDFs and internal portals.</p></div>
+        <div class="card rv"><div class="ic">👥</div><h3>Target Users</h3><p>Employees who need quick answers about HR policies, and HR teams looking to reduce repetitive questions and improve access to policy information.</p></div>
+        <div class="card rv"><div class="ic">🤖</div><h3>The Solution</h3><p>An AI chatbot that lets employees ask questions in natural language and receive clear, accurate answers based on official HR policy documents.</p></div>
+      </div>
+
+      <div class="callout rv" style="margin-top:38px">
+        <b>Tech Stack:</b> OpenAI LLM for response generation · OpenAI embeddings for document retrieval · LlamaIndex for RAG pipeline · Pinecone for vector storage · Gradio for the user interface. <a href="https://decodingdatascience.com/openai-2026/" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:underline">Get your OpenAI key →</a>
+      </div>
+
+      <div class="callout rv" style="margin-top:14px">
+        <b>Live Demo:</b> See the working chatbot prototype at <a href="https://huggingface.co/spaces/decodingdatascience/aiacceleratorbootcampmar26" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:underline">huggingface.co/spaces/decodingdatascience</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LIVE SCHEDULE ===== -->
+  <section id="dds-schedule">
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">Live Masterclasses</div>
+        <h2>3-Day Workshop Schedule</h2>
+        <p class="lead">Three live sessions designed to take you from understanding the problem to deploying a working prototype.</p>
+      </div>
+      <div class="sched rv">
+        <div class="sched-card">
+          <div class="s-day">Workshop 1</div>
+          <div class="s-date">Friday, July 24</div>
+          <div class="s-time">6:30 PM GST</div>
+          <div class="s-topic">AI Product Thinking &amp; RAG Foundations — Understand the problem, user, data, system architecture, and why RAG matters.</div>
+          <a class="btn btn-p" style="margin-top:16px;font-size:14px;padding:11px 22px" href="https://nas.com/artificialintelligence/events/1-ai-product-thinking-and-rag-foundations-1784632180217?discountCode=AIJUL202603" target="_blank" rel="noopener">Register &amp; Add to Calendar →</a>
+        </div>
+        <div class="sched-card">
+          <div class="s-day">Workshop 2</div>
+          <div class="s-date">Saturday, July 25</div>
+          <div class="s-time">11:00 AM GST</div>
+          <div class="s-topic">RAG Pipeline Engineering with LlamaIndex &amp; Pinecone — Hands-on session: document processing, embedding, vector storage, and retrieval chain.</div>
+          <a class="btn btn-p" style="margin-top:16px;font-size:14px;padding:11px 22px" href="https://nas.com/artificialintelligence/events/2-of-3-masterclasses-rag-pipeline-engineering-with-llamaindex-pinecone-1784637433944?discountCode=AIJUL2026BOOTCAMP2" target="_blank" rel="noopener">Register &amp; Add to Calendar →</a>
+        </div>
+        <div class="sched-card">
+          <div class="s-day">Workshop 3</div>
+          <div class="s-date">Sunday, July 26</div>
+          <div class="s-time">2:00 PM GST</div>
+          <div class="s-topic">From RAG to Real AI — Systems Integration, Evaluation &amp; Deployment. Connect the chatbot to a Gradio interface, deploy, and present your build.</div>
+          <a class="btn btn-p" style="margin-top:16px;font-size:14px;padding:11px 22px" href="https://nas.com/artificialintelligence/events/3-from-rag-to-real-ai-systems-integration-evaluation-deployment-1784872975431?discountCode=AIESC2131" target="_blank" rel="noopener">Register &amp; Add to Calendar →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TODAY'S CHECKLIST ===== -->
+  <section style="background:var(--bg2)">
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">Your Action Plan</div>
+        <h2>Today's Checklist</h2>
+        <p class="lead">Follow these steps in order. Complete everything before tonight's live masterclass.</p>
+      </div>
+      <ul class="checklist rv" style="margin:30px auto 0">
+        <li><span class="ck-icon ck-do">1</span><span class="ck-text"><b>Complete Day 0 — </b>Go through all videos, instructions, resources, and activities on the <a href="https://nas.com/artificialintelligence/challenges/ai-accelerator-bootcamp-ai-curious-to-ai-builders-jul" target="_blank" rel="noopener" style="color:var(--cyan)">bootcamp challenge page</a>.</span></li>
+        <li><span class="ck-icon ck-do">2</span><span class="ck-text"><b>Download the Idea Template — </b>Available inside Day 0. Download and save it locally.</span></li>
+        <li><span class="ck-icon ck-do">3</span><span class="ck-text"><b>Fill the template — </b>Complete it for the DDS HR Enterprise Chatbot project. Think about the business problem, intended users, HR documents, questions the chatbot should answer, expected features, and value.</span></li>
+        <li><span class="ck-icon ck-do">4</span><span class="ck-text"><b>Register for all 3 masterclasses — </b>Use the individual registration links in the <a href="#dds-schedule" style="color:var(--cyan)">Schedule section below</a>. Each session has its own registration page — add all three to your calendar.</span></li>
+        <li><span class="ck-icon ck-do">5</span><span class="ck-text"><b>Get your OpenAI API key — </b>Set up at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener" style="color:var(--cyan)">platform.openai.com/api-keys</a>.</span></li>
+        <li><span class="ck-icon ck-do">6</span><span class="ck-text"><b>Start the Python Certification — </b>Use coupon code <strong style="color:var(--amber)">python2026</strong> with the same email you used for the bootcamp. Worth ~$400, available as a limited-time bonus.</span></li>
+        <li><span class="ck-icon ck-do">7</span><span class="ck-text"><b>Join WhatsApp group — </b><a href="https://chat.whatsapp.com/LAihLOJARgfKjP6PJLFQ0d" target="_blank" rel="noopener" style="color:var(--cyan)">Join the communication channel</a> for updates, support, and community discussion.</span></li>
+        <li><span class="ck-icon ck-no">✕</span><span class="ck-text"><b>Do NOT submit Day 1 yet — </b>Review Day 1 resources but wait until after tonight's masterclass for detailed instructions. Submission deadline is Sunday 11:45 PM GST.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== ROADMAP ===== -->
+  <section class="roadmap" id="dds-roadmap">
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">Bootcamp Roadmap</div>
+        <h2>Your 3-Day Journey</h2>
+        <p class="lead">From clarity to deployment — a structured path to building your first production-style AI application.</p>
+      </div>
+      <div class="track">
+
+        <div class="day live rv">
+          <div class="dot">D0</div>
+          <div class="day-card">
+            <div class="day-head">
+              <h3>Day 0 — Setup &amp; Preparation</h3>
+              <span class="tag started">Complete First</span>
+            </div>
+            <div class="day-goal">Goal → Get ready to build</div>
+            <ul>
+              <li>Review bootcamp structure and outcomes</li>
+              <li>Understand the HR Chatbot project you will build</li>
+              <li>Download and fill the Project Planning Template</li>
+              <li>Join WhatsApp group and builder community</li>
+              <li>Set up OpenAI API key</li>
+              <li>Start Python Certification Course (optional but recommended)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day rv">
+          <div class="dot">D1</div>
+          <div class="day-card">
+            <div class="day-head">
+              <h3>Day 1 — Clarity Phase</h3>
+              <span class="tag date">Fri Jul 24 · 6:30 PM</span>
+            </div>
+            <div class="day-goal">Goal → Understand the problem before building</div>
+            <ul>
+              <li>Define what the HR Chatbot solves</li>
+              <li>Identify target users and their pain points</li>
+              <li>List input data sources (HR PDFs, handbooks, policies)</li>
+              <li>Write sample user questions</li>
+              <li>Define expected output and success criteria</li>
+              <li>Learn RAG architecture, LLM selection, and system design</li>
+              <li>Submit Day 1 checkpoint after the masterclass</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day rv">
+          <div class="dot">D2</div>
+          <div class="day-card">
+            <div class="day-head">
+              <h3>Day 2 — Building the RAG Pipeline</h3>
+              <span class="tag date">Sat Jul 25 · 11:00 AM</span>
+            </div>
+            <div class="day-goal">Goal → Build the AI engine</div>
+            <ul>
+              <li>Process and chunk HR policy documents</li>
+              <li>Generate embeddings with OpenAI</li>
+              <li>Store vectors in Pinecone</li>
+              <li>Build retrieval chain with LlamaIndex</li>
+              <li>Test question-answer accuracy</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="day rv">
+          <div class="dot">D3</div>
+          <div class="day-card">
+            <div class="day-head">
+              <h3>Day 3 — UI, Deployment &amp; Showcase</h3>
+              <span class="tag date">Sun Jul 26 · 2:00 PM</span>
+            </div>
+            <div class="day-goal">Goal → Ship and present your build</div>
+            <ul>
+              <li>Build Gradio interface for the chatbot</li>
+              <li>Deploy to Hugging Face Spaces or similar</li>
+              <li>Test end-to-end user experience</li>
+              <li>Record a short demo video</li>
+              <li>Submit progress report and final deliverables</li>
+              <li>Share on LinkedIn and community</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DAY 1 DELIVERABLE TEMPLATE ===== -->
+  <section>
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">Day 1 Checkpoint</div>
+        <h2>What You Need to Submit</h2>
+        <p class="lead">Complete this document filling guide for the HR Policy Chatbot. Submit after tonight's masterclass as text, Google Doc, PDF, or screenshot.</p>
+      </div>
+
+      <div class="callout warn rv">
+        <b>Important:</b> Today is not about building the chatbot yet. Today is about understanding the problem clearly. A good AI application starts with clarity — who is the user, what problem are we solving, what data will we use, what should the chatbot do well?
+      </div>
+
+      <div class="template-grid">
+
+        <div class="tpl-item rv">
+          <h3>Project Title</h3>
+          <p>Use "HR Policy Chatbot" — you may also add a simple internal name.</p>
+          <div class="example">Examples: HR Help Assistant · Employee Policy Bot · AskHR AI · HR Knowledge Assistant</div>
+        </div>
+
+        <div class="tpl-item rv">
+          <h3>Problem Statement</h3>
+          <p>Write 2–4 sentences explaining the problem your chatbot solves.</p>
+          <div class="example">Example: "Employees often struggle to find the right HR policy information quickly. Important details about leave, benefits, onboarding, and company rules are usually stored in long documents or internal portals. The HR Policy Chatbot will help employees ask questions in natural language and receive clear answers based on official HR documents."</div>
+        </div>
+
+        <div class="tpl-item rv">
+          <h3>Target User</h3>
+          <p>Identify who will use the chatbot and how it helps them.</p>
+          <div class="example">Example: "The chatbot is designed for employees who need quick answers about HR policies. It can also help HR teams reduce repetitive questions and improve access to policy information."</div>
+        </div>
+
+        <div class="tpl-item rv">
+          <h3>AI App Use Case</h3>
+          <p>Write one clear sentence describing what the app will do.</p>
+          <div class="example">Example: "The HR Policy Chatbot will allow employees to ask questions about HR policies and receive accurate, document-based answers with references where possible."</div>
+        </div>
+
+        <div class="tpl-item rv">
+          <h3>Input Data</h3>
+          <p>Mention the type of HR content the chatbot will use as its knowledge source.</p>
+          <div class="example">Sources: Employee handbook · Leave policy · WFH policy · Benefits policy · Code of conduct · Onboarding guide · Expense reimbursement policy · FAQ document · HR policy PDF</div>
+        </div>
+
+        <div class="tpl-item rv">
+          <h3>Sample User Questions</h3>
+          <p>Add 5–10 questions that an employee may ask the chatbot.</p>
+          <div class="example">• How many annual leave days do employees get?
+• What is the process to apply for sick leave?
+• Can I work from home?
+• What are the rules for maternity or paternity leave?
+• How do I claim business travel expenses?
+• What happens if I forget to mark attendance?
+• Where can I find the code of conduct?
+• What benefits are available to employees?</div>
+        </div>
+
+        <div class="tpl-item rv">
+          <h3>Expected Output</h3>
+          <p>Describe what the chatbot should return when a user asks a question.</p>
+          <div class="example">Example: "The chatbot should provide a clear answer using the HR policy document. The answer should be simple, professional, and easy to understand. Where possible, it should mention the relevant policy section or source document."</div>
+        </div>
+
+        <div class="tpl-item rv">
+          <h3>Definition of Done</h3>
+          <p>Define what a successful first version looks like and your success metrics.</p>
+          <div class="example">Example: "The first version will be successful if a user can ask HR policy questions and receive helpful answers based on the uploaded HR document. The chatbot should avoid giving answers not supported by the document and should clearly say when the information is not available."</div>
+        </div>
+
+        <div class="tpl-item rv">
+          <h3>Future Improvements (Optional)</h3>
+          <p>Mention 2–3 improvements for later versions.</p>
+          <div class="example">Ideas: Add source references · Support multiple HR documents · Employee-specific access control · Escalation to HR team · Multilingual support · Downloadable answer summaries · Feedback buttons for answer quality</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRIZES & SOCIAL ===== -->
+  <section style="background:var(--bg2)">
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">Prizes &amp; Visibility</div>
+        <h2>Optional — Compete for Rewards</h2>
+        <p class="lead">Social media posting is optional but opens you up for scholarship and license prize eligibility.</p>
+      </div>
+      <div class="grid g2 rv">
+        <div class="card">
+          <div class="ic">🏆</div>
+          <h3>Prize Pool</h3>
+          <p>$2,400 in AI Residency scholarship value + $750 JetBrains product license for eligible participants who complete all checkpoints, submit proof of work, and share on social media.</p>
+        </div>
+        <div class="card">
+          <div class="ic">📢</div>
+          <h3>How to Participate</h3>
+          <p>Share a LinkedIn post about your bootcamp participation, tag <a href="https://www.linkedin.com/company/decodingdatascience/" target="_blank" rel="noopener" style="color:var(--cyan)">@DecodingDataScience</a>, post in the <a href="https://www.linkedin.com/groups/9371112/" target="_blank" rel="noopener" style="color:var(--cyan)">DDS LinkedIn Group</a>, and share in the <a href="https://www.skool.com/decoding-data-science-6929" target="_blank" rel="noopener" style="color:var(--cyan)">Skool Community</a>.</p>
+        </div>
+      </div>
+      <p class="rv" style="text-align:center;font-size:12.5px;color:var(--muted);margin-top:28px;max-width:700px;margin-left:auto;margin-right:auto">Scholarships, licenses, and opportunities are subject to eligibility, project quality, submission completion, and final review by the DDS team and partners.</p>
+    </div>
+  </section>
+
+  <!-- ===== LINKS & RESOURCES ===== -->
+  <section>
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">Resources</div>
+        <h2>Quick Links</h2>
+        <p class="lead">All the links you need, in one place.</p>
+      </div>
+      <div class="link-grid rv">
+        <a class="link-card" href="https://nas.com/artificialintelligence/challenges/ai-accelerator-bootcamp-ai-curious-to-ai-builders-jul" target="_blank" rel="noopener">
+          <div class="lk-ic">📋</div>
+          <div><div class="lk-title">Bootcamp Challenge Page</div><div class="lk-desc">Day 0 &amp; Day 1 content, checkpoints, and submissions</div></div>
+        </a>
+        <a class="link-card" href="https://nas.com/artificialintelligence/events/1-ai-product-thinking-and-rag-foundations-1784632180217?discountCode=AIJUL202603" target="_blank" rel="noopener">
+          <div class="lk-ic">1️⃣</div>
+          <div><div class="lk-title">Workshop 1 — Friday</div><div class="lk-desc">AI Product Thinking &amp; RAG Foundations · 6:30 PM GST</div></div>
+        </a>
+        <a class="link-card" href="https://nas.com/artificialintelligence/events/2-of-3-masterclasses-rag-pipeline-engineering-with-llamaindex-pinecone-1784637433944?discountCode=AIJUL2026BOOTCAMP2" target="_blank" rel="noopener">
+          <div class="lk-ic">2️⃣</div>
+          <div><div class="lk-title">Workshop 2 — Saturday</div><div class="lk-desc">RAG Pipeline Engineering with LlamaIndex &amp; Pinecone · 11:00 AM GST</div></div>
+        </a>
+        <a class="link-card" href="https://nas.com/artificialintelligence/events/3-from-rag-to-real-ai-systems-integration-evaluation-deployment-1784872975431?discountCode=AIESC2131" target="_blank" rel="noopener">
+          <div class="lk-ic">3️⃣</div>
+          <div><div class="lk-title">Workshop 3 — Sunday</div><div class="lk-desc">From RAG to Real AI — Integration, Evaluation &amp; Deployment · 2:00 PM GST</div></div>
+        </a>
+        <a class="link-card" href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">
+          <div class="lk-ic">🔑</div>
+          <div><div class="lk-title">OpenAI API Keys</div><div class="lk-desc">Set up your OpenAI key for the bootcamp project</div></div>
+        </a>
+        <a class="link-card" href="https://huggingface.co/spaces/decodingdatascience/aiacceleratorbootcampmar26" target="_blank" rel="noopener">
+          <div class="lk-ic">🤖</div>
+          <div><div class="lk-title">Live Chatbot Demo</div><div class="lk-desc">See the working HR Chatbot prototype on Hugging Face</div></div>
+        </a>
+        <a class="link-card" href="https://chat.whatsapp.com/LAihLOJARgfKjP6PJLFQ0d" target="_blank" rel="noopener">
+          <div class="lk-ic">💬</div>
+          <div><div class="lk-title">WhatsApp Group</div><div class="lk-desc">Join for all communication, support, and updates</div></div>
+        </a>
+        <a class="link-card" href="https://decodingdatascience.com/openai-2026/" target="_blank" rel="noopener">
+          <div class="lk-ic">📖</div>
+          <div><div class="lk-title">OpenAI Setup Guide</div><div class="lk-desc">Step-by-step guide to setting up your OpenAI account</div></div>
+        </a>
+        <a class="link-card" href="https://www.linkedin.com/groups/9371112/" target="_blank" rel="noopener">
+          <div class="lk-ic">💼</div>
+          <div><div class="lk-title">DDS LinkedIn Group</div><div class="lk-desc">Share progress and connect with the builder community</div></div>
+        </a>
+        <a class="link-card" href="https://www.skool.com/decoding-data-science-6929" target="_blank" rel="noopener">
+          <div class="lk-ic">🏠</div>
+          <div><div class="lk-title">Skool Community</div><div class="lk-desc">Post updates and engage with fellow participants</div></div>
+        </a>
+        <a class="link-card" href="https://www.trustpilot.com/review/decodingdatascience.com" target="_blank" rel="noopener">
+          <div class="lk-ic">⭐</div>
+          <div><div class="lk-title">Leave a Review</div><div class="lk-desc">If you enjoyed the bootcamp, share your experience on Trustpilot</div></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FINAL SUBMISSION ===== -->
+  <section style="background:var(--bg2)">
+    <div class="wrap">
+      <div class="center rv">
+        <div class="kicker">Final Submission</div>
+        <h2>What to Submit by Sunday</h2>
+        <p class="lead">Your final deliverables — due by Sunday, July 26 at 11:45 PM GST.</p>
+      </div>
+      <ul class="checklist rv" style="margin:30px auto 0">
+        <li><span class="ck-icon ck-do">1</span><span class="ck-text"><b>Progress Report — </b>Update the Progress Notebook explaining your journey through the project, decisions made, and lessons learned.</span></li>
+        <li><span class="ck-icon ck-do">2</span><span class="ck-text"><b>Demo Video — </b>Record a short video showing what you have built — the working chatbot, your approach, and key features.</span></li>
+        <li><span class="ck-icon ck-do">3</span><span class="ck-text"><b>LinkedIn Post — </b>Share a post about your experience in the <a href="https://www.linkedin.com/groups/9371112/" target="_blank" rel="noopener" style="color:var(--cyan)">DDS LinkedIn Group</a> tagging <a href="https://www.linkedin.com/company/decodingdatascience/" target="_blank" rel="noopener" style="color:var(--cyan)">@DecodingDataScience</a>.</span></li>
+        <li><span class="ck-icon ck-do">4</span><span class="ck-text"><b>Skool Post — </b>Share an update in the <a href="https://www.skool.com/decoding-data-science-6929" target="_blank" rel="noopener" style="color:var(--cyan)">Skool community</a>.</span></li>
+        <li><span class="ck-icon ck-do">5</span><span class="ck-text"><b>Upload — </b>Upload your Progress Notebook in the final checkpoint on the challenge page.</span></li>
+      </ul>
+      <div class="callout rv" style="margin-top:24px">
+        <b>Note:</b> The challenge format is optional for participants with limited time, but completing checkpoints helps you stay accountable, finish your application, and get maximum value from the bootcamp.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CERTIFICATE ===== -->
+  <section class="cert">
+    <div class="wrap rv">
+      <div>
+        <div class="kicker">Certification</div>
+        <h2>CPD-Certified Completion</h2>
+        <p class="lead" style="margin-bottom:18px">Earn a CPD-backed certificate worth 10 CPD hours upon successful completion of the bootcamp and all checkpoints.</p>
+        <p style="font-size:14.5px;color:var(--muted)">Your certificate validates practical AI application development skills — from problem scoping to RAG architecture to deployment. Recognized by employers and aligned with continuing professional development standards.</p>
+        <div class="cpd-row">
+          <img src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/cpdmember-logo-1-300x275.webp" alt="CPD Member" loading="lazy">
+          <p>Decoding Data Science is a CPD Approved Training Provider. This bootcamp qualifies for 10 CPD-certified learning hours.</p>
+        </div>
+      </div>
+      <div class="cert-img">
+        <img src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/application%20certificate.png" alt="DDS Certificate of Completion" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOST ===== -->
+  <section class="host" style="background:var(--bg2)">
+    <div class="wrap rv">
+      <div class="host-photo">
+        <img src="https://raw.githubusercontent.com/Decoding-Data-Science/airesidency/main/Arshad_photo.png" alt="Mohammad Arshad — Founder of Decoding Data Science" loading="lazy">
+      </div>
+      <div>
+        <div class="kicker">Your Instructor</div>
+        <h2>Mohammad Arshad</h2>
+        <p class="lead" style="margin-bottom:12px">Founder &amp; CEO of Decoding Data Science (DDS), with 21 years of industry experience in data science, AI, and technology leadership.</p>
+        <p style="font-size:14.5px;color:var(--muted)">Global keynote speaker at LEAP, GITEX, and the Global AI Show. Former roles at MAF, Accenture, HP, and Dell. MBA with a concentration in Analytics and Strategy. Built one of the UAE's largest AI and data science communities with 194K+ members across 50+ countries.</p>
+        <div class="host-meta">
+          <span class="badge hot">21 Years Experience</span>
+          <span class="badge">LEAP · GITEX Speaker</span>
+          <span class="badge">194K+ Community</span>
+          <span class="badge hot">CPD Approved Provider</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section>
+    <div class="wrap" style="max-width:840px">
+      <div class="center rv">
+        <div class="kicker">FAQ</div>
+        <h2>Frequently Asked Questions</h2>
+      </div>
+      <div style="margin-top:36px" class="rv" id="ddsFaq">
+        <div class="faq-item"><button class="faq-q">What is the AI Accelerator Bootcamp?</button><div class="faq-a"><p>A 3-day intensive bootcamp that takes you from AI Curious to AI Builder. You will build a fully functional HR Policy Chatbot using OpenAI, LlamaIndex, Pinecone, and Gradio — learning production-style AI application development through hands-on workshops.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Do I need prior coding experience?</button><div class="faq-a"><p>Basic Python knowledge is helpful. If you need to strengthen your foundations, the bootcamp includes access to a Python Certification Course (worth ~$400) available as a limited-time bonus using coupon code python2026.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Can I choose my own project?</button><div class="faq-a"><p>For this bootcamp, everyone works on the same project scenario — the DDS HR Enterprise Chatbot. This ensures the live sessions, resources, and guidance are aligned with what you are building. Do not choose a different project at this stage.</p></div></div>
+        <div class="faq-item"><button class="faq-q">What is the schedule?</button><div class="faq-a"><p>Three live masterclasses: Friday July 24 at 6:30 PM GST, Saturday July 25 at 11:00 AM GST, and Sunday July 26 at 2:00 PM GST. All sessions are recorded, but live attendance is strongly recommended so you can ask questions and follow along.</p></div></div>
+        <div class="faq-item"><button class="faq-q">When should I submit Day 1?</button><div class="faq-a"><p>Do not submit Day 1 before tonight's live masterclass (Friday 6:30 PM GST). More detailed instructions, architecture guidance, and project expectations will be explained during the session. Final submission deadline is Sunday, July 26 at 11:45 PM GST.</p></div></div>
+        <div class="faq-item"><button class="faq-q">What do I need to set up?</button><div class="faq-a"><p>You will need an OpenAI API key (get it at platform.openai.com/api-keys), Python installed on your machine, and access to the bootcamp challenge page on nas.com. Detailed setup instructions are in Day 0.</p></div></div>
+        <div class="faq-item"><button class="faq-q">What is RAG and why does it matter?</button><div class="faq-a"><p>RAG (Retrieval-Augmented Generation) is a technique that lets an LLM answer questions using your own documents instead of relying only on its training data. It is essential for building enterprise AI assistants that provide accurate, document-based answers.</p></div></div>
+        <div class="faq-item"><button class="faq-q">How do I register for the sessions?</button><div class="faq-a"><p>Each of the three masterclasses has its own registration link with a pre-applied discount code. Use the links in the Schedule section above to register for all three and add them to your calendar.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Will I get a certificate?</button><div class="faq-a"><p>Yes. Upon successful completion of the bootcamp and all checkpoints, you will receive a CPD-certified certificate worth 10 CPD learning hours from Decoding Data Science, a CPD Approved Training Provider.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Are the prizes guaranteed?</button><div class="faq-a"><p>No. Scholarships ($2,400 AI Residency value) and JetBrains licenses ($750) are subject to eligibility, project quality, checkpoint completion, social media proof of work, and final review by the DDS team.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Is the challenge format required?</button><div class="faq-a"><p>The challenge format is optional for participants who have limited time, but completing the checkpoints helps you stay accountable, finish your application, and get the maximum value from the bootcamp.</p></div></div>
+        <div class="faq-item"><button class="faq-q">What do I submit at the end?</button><div class="faq-a"><p>Your final deliverables include: updated Progress Notebook, a short demo video, a LinkedIn post in the DDS group, a Skool community post, and the final checkpoint upload on the challenge page.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Who is organizing this?</button><div class="faq-a"><p>The AI Accelerator Bootcamp is organized by Decoding Data Science, founded by Mohammad Arshad, as part of the DDS Academy and AI Guild ecosystem. DDS is a CPD Approved Training Provider with 194K+ community members across 50+ countries.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FINAL CTA ===== -->
+  <section class="final">
+    <div class="wrap">
+      <div class="rv">
+        <h2>Ready to go from AI Curious to AI Builder?</h2>
+        <p class="lead">The bootcamp is live. Complete Day 0, register for all three masterclasses, and start building your HR Policy Chatbot.</p>
+        <a class="btn btn-p" style="font-size:18px;padding:18px 40px" href="#dds-schedule">Register for All Sessions ↑</a>
+        <p class="fineprint">All sessions recorded · CPD certified · 10 CPD hours</p>
+        <div class="org-line">Decoding Data Science · AI Guild · DDS Academy — © 2026 Decoding Data Science</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FLOATING MOBILE CTA ===== -->
+  <div class="float-cta">
+    <a href="#dds-schedule">⚡ Register for All Sessions ↑</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  function pad(n){return (n<10?'0':'')+n}
+
+  /* ---------- Countdown to submission deadline: Jul 26, 2026 23:45 GST (UTC+4) ---------- */
+  var T=new Date('2026-07-26T23:45:00+04:00').getTime();
+  function tickBig(){
+    var d=Math.max(0,T-Date.now());
+    var dd=Math.floor(d/864e5), hh=Math.floor(d%864e5/36e5), mm=Math.floor(d%36e5/6e4), ss=Math.floor(d%6e4/1e3);
+    var el=function(id){return document.getElementById(id)};
+    if(el('cdD')){el('cdD').textContent=pad(dd);el('cdH').textContent=pad(hh);el('cdM').textContent=pad(mm);el('cdS').textContent=pad(ss);}
+  }
+  tickBig(); setInterval(tickBig,1000);
+
+  /* ---------- FAQ accordion ---------- */
+  document.querySelectorAll('#ddsFaq .faq-q').forEach(function(q){
+    q.addEventListener('click',function(){
+      var item=q.parentElement, a=item.querySelector('.faq-a'), open=item.classList.contains('open');
+      document.querySelectorAll('#ddsFaq .faq-item.open').forEach(function(o){
+        o.classList.remove('open'); o.querySelector('.faq-a').style.maxHeight=null;
+      });
+      if(!open){ item.classList.add('open'); a.style.maxHeight=a.scrollHeight+'px'; }
+    });
+  });
+
+  /* ---------- Smooth scroll ---------- */
+  document.querySelectorAll('#dds-bootcamp a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var t=document.querySelector(a.getAttribute('href'));
+      if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
+    });
+  });
+
+  /* ---------- Scroll reveal ---------- */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+    },{threshold:.12});
+    document.querySelectorAll('#dds-bootcamp .rv').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('#dds-bootcamp .rv').forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+</script>
