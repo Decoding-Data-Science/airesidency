@@ -1,0 +1,916 @@
+<!-- ============================================================
+  Decoding Data Science — OpenAI Models Landscape (Cohort 11 · Aug 2026)
+  Single-file reference guide. Paste into a WordPress Custom HTML block.
+  No <html>/<head>/<body> wrapper needed — works embedded as-is.
+  ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  #dds-oai-c11{
+    --bg:#070b14; --bg2:#0d1424; --panel:#101a2e; --line:rgba(140,170,220,.14);
+    --cyan:#22d3ee; --violet:#8b5cf6; --amber:#f5a623;
+    --txt:#e7edf7; --muted:#94a3bd;
+    --grad:linear-gradient(92deg,#22d3ee 0%,#8b5cf6 100%);
+    --radius:16px;
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--bg); color:var(--txt);
+    line-height:1.6; font-size:16px;
+    margin:0; overflow-x:hidden;
+  }
+  #dds-oai-c11 *,#dds-oai-c11 *::before,#dds-oai-c11 *::after{box-sizing:border-box;margin:0;padding:0}
+  #dds-oai-c11 img{max-width:100%;display:block}
+  #dds-oai-c11 a{text-decoration:none;color:inherit}
+  #dds-oai-c11 .wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+  #dds-oai-c11 section{padding:60px 0;position:relative}
+  #dds-oai-c11 h1,#dds-oai-c11 h2,#dds-oai-c11 h3{font-family:'Space Grotesk',sans-serif;line-height:1.15;letter-spacing:-.01em}
+  #dds-oai-c11 h2{font-size:clamp(26px,3.6vw,36px);margin-bottom:12px}
+  #dds-oai-c11 .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);display:inline-flex;align-items:center;gap:8px;margin-bottom:14px}
+  #dds-oai-c11 .kicker::before{content:"";width:22px;height:1px;background:var(--cyan)}
+  #dds-oai-c11 .lead{color:var(--muted);font-size:16.5px;max-width:720px}
+  #dds-oai-c11 .center{text-align:center}
+  #dds-oai-c11 .center .lead{margin:0 auto}
+
+  /* Visible by default — JS opts elements INTO the hidden pre-reveal state (see script below).
+     This means content never depends on scroll/IntersectionObserver firing to be seen:
+     if JS is blocked, slow, or a screenshot tool skips scrolling, everything still shows. */
+  #dds-oai-c11 .rv{opacity:1;transform:none;transition:opacity .6s ease,transform .6s ease}
+  #dds-oai-c11 .rv.pre{opacity:0;transform:translateY(20px)}
+  #dds-oai-c11 .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    #dds-oai-c11 .rv{opacity:1;transform:none;transition:none}
+    #dds-oai-c11 *{animation:none!important;transition:none!important}
+  }
+
+  /* Hero */
+  #dds-oai-c11 .hero{padding:72px 0 0;background:
+    radial-gradient(900px 480px at 80% -10%,rgba(139,92,246,.22),transparent 60%),
+    radial-gradient(700px 420px at 8% 12%,rgba(34,211,238,.14),transparent 60%),
+    var(--bg)}
+  #dds-oai-c11 .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:linear-gradient(rgba(140,170,220,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(140,170,220,.05) 1px,transparent 1px);
+    background-size:44px 44px;mask-image:radial-gradient(600px 380px at 50% 0%,#000 30%,transparent 75%)}
+  #dds-oai-c11 .hero .wrap{position:relative;z-index:1;padding-bottom:44px}
+  #dds-oai-c11 .badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px}
+  #dds-oai-c11 .badge{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.05em;border:1px solid var(--line);border-radius:999px;padding:5px 13px;color:var(--muted);background:rgba(16,26,46,.6)}
+  #dds-oai-c11 .badge.hot{border-color:rgba(34,211,238,.5);color:var(--cyan)}
+  #dds-oai-c11 .badge.live{border-color:rgba(245,166,35,.5);color:var(--amber)}
+  #dds-oai-c11 .badge.live::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--amber);margin-right:7px;animation:dds-pulse 1.6s infinite}
+  @keyframes dds-pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,.5)}50%{box-shadow:0 0 0 6px rgba(245,166,35,0)}}
+  #dds-oai-c11 .hero h1{font-size:clamp(30px,5vw,52px);text-align:center;max-width:940px;margin:0 auto 16px;font-weight:700}
+  #dds-oai-c11 .hero h1 .gx{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  #dds-oai-c11 .hero .sub{text-align:center;color:var(--muted);max-width:760px;margin:0 auto 30px;font-size:17px}
+  #dds-oai-c11 .meta-row{display:flex;flex-wrap:wrap;gap:10px 26px;justify-content:center;font-size:13.5px}
+  #dds-oai-c11 .meta-item{color:var(--muted);white-space:nowrap}
+  #dds-oai-c11 .meta-item b{color:var(--txt);font-weight:600}
+  #dds-oai-c11 .meta-item .em{margin-right:5px}
+
+  /* Sticky tab nav */
+  #dds-oai-c11 .tabnav{position:sticky;top:0;z-index:50;background:linear-gradient(90deg,#0b1730,#101a2e 55%,#0b1730);border-top:1px solid var(--line);border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
+  #dds-oai-c11 .tabnav .wrap{padding:0 20px;display:flex;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
+  #dds-oai-c11 .tabnav .wrap::-webkit-scrollbar{display:none}
+  #dds-oai-c11 .tab-btn{flex:0 0 auto;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;letter-spacing:.02em;color:var(--muted);background:transparent;border:none;padding:18px 22px;cursor:pointer;white-space:nowrap;position:relative;transition:color .2s}
+  #dds-oai-c11 .tab-btn:hover{color:var(--txt)}
+  #dds-oai-c11 .tab-btn.active{color:var(--cyan)}
+  #dds-oai-c11 .tab-btn.active::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--grad)}
+  #dds-oai-c11 .tab-btn .em{margin-right:6px}
+
+  /* Anchor-jump offset: works with plain href="#id" navigation with zero JS required,
+     so tabs still function even if this environment strips/breaks the <script> tag.
+     140px clears our own sticky tab nav plus a typical WordPress theme header stacked above it. */
+  #dds-oai-c11 #dds-c11-overview,
+  #dds-oai-c11 #dds-c11-cards,
+  #dds-oai-c11 #dds-c11-compare,
+  #dds-oai-c11 #dds-c11-calc,
+  #dds-oai-c11 #dds-c11-tasks,
+  #dds-oai-c11 #dds-c11-guide{
+    scroll-margin-top:140px;
+  }
+
+  /* Stat strip removed in favor of meta row; keep small credibility strip lower */
+  #dds-oai-c11 .strip{border-bottom:1px solid var(--line);background:var(--bg2);padding:26px 0}
+  #dds-oai-c11 .strip .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px;align-items:center}
+  #dds-oai-c11 .stat{text-align:center}
+  #dds-oai-c11 .stat .n{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:#fff}
+  #dds-oai-c11 .stat .t{font-size:12.5px;color:var(--muted)}
+
+  /* Default stack callout */
+  #dds-oai-c11 .callout{margin:0 auto;max-width:960px;background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(139,92,246,.08));border:1px solid rgba(34,211,238,.25);border-radius:var(--radius);padding:24px 28px;font-size:14.5px;color:var(--txt)}
+  #dds-oai-c11 .callout b{color:var(--cyan)}
+  #dds-oai-c11 .callout .cl-title{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+
+  /* Layer cards */
+  #dds-oai-c11 .grid{display:grid;gap:16px;margin-top:34px}
+  #dds-oai-c11 .g5{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+  #dds-oai-c11 .g4{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  #dds-oai-c11 .g3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  #dds-oai-c11 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:transform .25s,border-color .25s,box-shadow .25s}
+  #dds-oai-c11 .card:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.45);box-shadow:0 16px 40px rgba(0,0,0,.4)}
+  #dds-oai-c11 .card .layer-n{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--violet);text-transform:uppercase;margin-bottom:8px}
+  #dds-oai-c11 .card h3{font-size:16.5px;margin-bottom:8px}
+  #dds-oai-c11 .card p{font-size:13.5px;color:var(--muted)}
+
+  /* Model cards */
+  #dds-oai-c11 .mcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:10px}
+  #dds-oai-c11 .mcard:hover{border-color:rgba(34,211,238,.45)}
+  #dds-oai-c11 .mcard-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  #dds-oai-c11 .mcard-name{font-family:'JetBrains Mono',monospace;font-size:14.5px;color:var(--cyan)}
+  #dds-oai-c11 .mcard-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;border-radius:999px;padding:3px 10px;border:1px solid var(--line);color:var(--muted)}
+  #dds-oai-c11 .mcard-tag.rec{border-color:rgba(34,211,238,.5);color:var(--cyan)}
+  #dds-oai-c11 .mcard p{font-size:13.5px;color:var(--muted)}
+  #dds-oai-c11 .mcard-price{display:flex;gap:16px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--txt);border-top:1px solid var(--line);padding-top:10px;margin-top:2px}
+  #dds-oai-c11 .mcard-price span b{color:var(--amber);font-weight:600}
+
+  /* Timeline */
+  #dds-oai-c11 .roadmap{background:var(--bg2)}
+  #dds-oai-c11 .tl{position:relative;margin-top:40px;padding-left:2px}
+  #dds-oai-c11 .tl::before{content:"";position:absolute;left:21px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--amber),var(--cyan) 18%,var(--violet))}
+  #dds-oai-c11 .tl-item{position:relative;padding-left:64px;margin-bottom:16px}
+  #dds-oai-c11 .tl-item .dot{position:absolute;left:8px;top:4px;width:28px;height:28px;border-radius:50%;background:var(--bg);border:2px solid var(--cyan)}
+  #dds-oai-c11 .tl-item.now .dot{border-color:var(--amber);animation:dds-pulse 1.8s infinite}
+  #dds-oai-c11 .tl-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;transition:border-color .25s,transform .25s}
+  #dds-oai-c11 .tl-card:hover{border-color:rgba(139,92,246,.5);transform:translateX(4px)}
+  #dds-oai-c11 .tl-item.now .tl-card{border-color:rgba(245,166,35,.45);background:linear-gradient(135deg,rgba(245,166,35,.07),var(--panel) 45%)}
+  #dds-oai-c11 .tl-date{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--cyan);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+  #dds-oai-c11 .tl-name{font-size:15px;font-weight:600}
+
+  /* Themes */
+  #dds-oai-c11 .theme{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+  #dds-oai-c11 .theme:last-child{border-bottom:none}
+  #dds-oai-c11 .theme .tnum{flex:0 0 auto;font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;width:44px}
+  #dds-oai-c11 .theme h3{font-size:16.5px;margin-bottom:5px}
+  #dds-oai-c11 .theme p{font-size:14px;color:var(--muted)}
+
+  /* Tables */
+  #dds-oai-c11 .tbl-wrap{overflow-x:auto;margin-top:22px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
+  #dds-oai-c11 table{width:100%;border-collapse:collapse;min-width:640px;font-size:13.5px}
+  #dds-oai-c11 th{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+  #dds-oai-c11 td{padding:11px 14px;border-bottom:1px solid rgba(140,170,220,.08);white-space:nowrap;color:var(--txt)}
+  #dds-oai-c11 tr:last-child td{border-bottom:none}
+  #dds-oai-c11 tr:hover td{background:rgba(34,211,238,.04)}
+  #dds-oai-c11 td.model{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--cyan)}
+  #dds-oai-c11 td.dim{color:var(--muted)}
+  #dds-oai-c11 .tbl-note{font-size:12px;color:var(--muted);margin-top:12px}
+  #dds-oai-c11 .sub-h{font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--violet);margin:34px 0 4px}
+  #dds-oai-c11 .sub-h:first-of-type{margin-top:8px}
+
+  /* Change banner */
+  #dds-oai-c11 .change{margin-top:26px;background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.3);border-radius:12px;padding:16px 20px;font-size:13.5px;color:var(--txt)}
+  #dds-oai-c11 .change b{color:var(--amber)}
+
+  /* Task mapping */
+  #dds-oai-c11 .tmap-row{display:grid;grid-template-columns:1fr 1fr auto;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:10px}
+  #dds-oai-c11 .tmap-row .task{font-size:14.5px;font-weight:600}
+  #dds-oai-c11 .tmap-row .why{font-size:13px;color:var(--muted)}
+  #dds-oai-c11 .tmap-row .rec{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--bg);background:var(--grad);border-radius:999px;padding:6px 14px;white-space:nowrap;font-weight:600}
+  @media (max-width:760px){#dds-oai-c11 .tmap-row{grid-template-columns:1fr}}
+
+  /* Selection guide */
+  #dds-oai-c11 .sg-step{display:flex;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:14px}
+  #dds-oai-c11 .sg-q{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.4);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;color:var(--cyan);font-weight:700;font-size:14px}
+  #dds-oai-c11 .sg-step h3{font-size:15.5px;margin-bottom:6px}
+  #dds-oai-c11 .sg-step p{font-size:13.5px;color:var(--muted)}
+  #dds-oai-c11 .sg-step p b{color:var(--cyan)}
+
+  /* Calculator */
+  #dds-oai-c11 .calc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin-top:34px}
+  #dds-oai-c11 .calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-bottom:20px}
+  #dds-oai-c11 .field label{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  #dds-oai-c11 .field select,#dds-oai-c11 .field input{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--txt);font-family:'Inter',sans-serif;font-size:14.5px}
+  #dds-oai-c11 .field select:focus,#dds-oai-c11 .field input:focus{outline:none;border-color:var(--cyan)}
+  #dds-oai-c11 .calc-result{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:6px}
+  #dds-oai-c11 .rbox{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
+  #dds-oai-c11 .rbox .rl{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  #dds-oai-c11 .rbox .rv2{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--cyan);margin-top:6px}
+  #dds-oai-c11 .rbox.total .rv2{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  #dds-oai-c11 .calc-note{font-size:12px;color:var(--muted);margin-top:16px}
+
+  /* Calculator — quick presets */
+  #dds-oai-c11 .presets{margin-bottom:22px}
+  #dds-oai-c11 .presets-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:block}
+  #dds-oai-c11 .preset-row{display:flex;flex-wrap:wrap;gap:10px}
+  #dds-oai-c11 .preset-btn{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;color:var(--txt);background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:10px 16px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:border-color .2s,transform .2s,background .2s}
+  #dds-oai-c11 .preset-btn:hover{border-color:rgba(34,211,238,.5);transform:translateY(-2px)}
+  #dds-oai-c11 .preset-btn.active{border-color:var(--cyan);background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(139,92,246,.1))}
+  #dds-oai-c11 .preset-btn .em{font-size:14px}
+
+  /* Calculator — monthly cost comparison columns */
+  #dds-oai-c11 .cmp-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+  #dds-oai-c11 .cmp-col{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px;transition:border-color .25s}
+  #dds-oai-c11 .cmp-col.cheapest{border-color:rgba(34,211,238,.55);background:linear-gradient(160deg,rgba(34,211,238,.09),var(--bg2) 55%)}
+  #dds-oai-c11 .cmp-col-head{display:flex;gap:8px;align-items:center}
+  #dds-oai-c11 .cmp-col-head select{flex:1}
+  #dds-oai-c11 .cmp-remove{flex:0 0 auto;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:13px;line-height:1}
+  #dds-oai-c11 .cmp-remove:hover{border-color:rgba(245,166,35,.5);color:var(--amber)}
+  #dds-oai-c11 .cmp-col .field{margin:0}
+  #dds-oai-c11 .cmp-result{border-top:1px solid var(--line);padding-top:12px;text-align:center;margin-top:2px}
+  #dds-oai-c11 .cmp-cost{font-family:'Space Grotesk',sans-serif;font-size:25px;font-weight:700;color:var(--txt)}
+  #dds-oai-c11 .cmp-col.cheapest .cmp-cost{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  #dds-oai-c11 .cmp-basis{font-size:11px;color:var(--muted);margin-top:4px}
+  #dds-oai-c11 .cmp-badge{display:inline-block;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--grad);color:var(--bg);border-radius:999px;padding:3px 10px;font-weight:700}
+  #dds-oai-c11 .add-model-btn{margin-top:18px;background:transparent;border:1px dashed var(--line);color:var(--muted);border-radius:12px;padding:13px;width:100%;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;transition:border-color .2s,color .2s}
+  #dds-oai-c11 .add-model-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+  #dds-oai-c11 .add-model-btn:disabled{opacity:.4;cursor:not-allowed}
+
+  /* Footer */
+  #dds-oai-c11 .foot{border-top:1px solid var(--line);padding:32px 0;text-align:center}
+  #dds-oai-c11 .foot p{font-size:12.5px;color:var(--muted)}
+  #dds-oai-c11 .foot .dds-mark{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--txt);letter-spacing:.02em}
+  #dds-oai-c11 .foot .dds-mark span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  @media (max-width:640px){
+    #dds-oai-c11 section{padding:40px 0}
+    #dds-oai-c11 .theme{flex-direction:column;gap:6px}
+    #dds-oai-c11 .calc{padding:20px}
+    #dds-oai-c11 .tab-btn{padding:16px 16px;font-size:12.5px}
+  }
+</style>
+
+<div id="dds-oai-c11">
+
+  <!-- HERO -->
+  <section class="hero" style="padding-bottom:0">
+    <div class="wrap">
+      <div class="badges">
+        <span class="badge live">Cohort 11 · Live Reference</span>
+        <span class="badge hot">Updated 1 Aug 2026</span>
+        <span class="badge">DDS AI Residency</span>
+      </div>
+      <h1>OpenAI Models Landscape <span class="gx">— Complete Reference &amp; Cost Estimator</span></h1>
+      <p class="sub">A full breakdown of every model in OpenAI's current API portfolio — organized by tier, use case, and cost — with an interactive calculator to estimate your production spend before you build.</p>
+      <div class="meta-row">
+        <span class="meta-item"><span class="em">📅</span><b>Updated:</b> 1 Aug 2026</span>
+        <span class="meta-item"><span class="em">🧠</span><b>Models covered:</b> 70+</span>
+        <span class="meta-item"><span class="em">💡</span><b>Default recommendation:</b> GPT-5.6 Terra</span>
+        <span class="meta-item"><span class="em">🔗</span><b>Source:</b> OpenAI official docs + pricing</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STICKY TAB NAV -->
+  <nav class="tabnav">
+    <div class="wrap">
+      <a class="tab-btn" href="#dds-c11-overview" data-target="dds-c11-overview">OVERVIEW</a>
+      <a class="tab-btn" href="#dds-c11-cards" data-target="dds-c11-cards">MODEL CARDS</a>
+      <a class="tab-btn" href="#dds-c11-compare" data-target="dds-c11-compare">COMPARE TABLE</a>
+      <a class="tab-btn" href="#dds-c11-calc" data-target="dds-c11-calc"><span class="em">💰</span>COST CALCULATOR</a>
+      <a class="tab-btn" href="#dds-c11-tasks" data-target="dds-c11-tasks">TASK MAPPING</a>
+      <a class="tab-btn" href="#dds-c11-guide" data-target="dds-c11-guide">SELECTION GUIDE</a>
+    </div>
+  </nav>
+
+  <!-- ================= OVERVIEW ================= -->
+  <div id="dds-c11-overview">
+
+    <section style="padding-top:44px">
+      <div class="wrap center rv">
+        <div class="callout" style="text-align:left">
+          <span class="cl-title"><span class="em">🎯</span>Cohort 11 Default Stack</span>
+          <b>GPT-5.6 Terra</b> → everyday chat/coding &nbsp;·&nbsp; <b>GPT-5.6 Sol</b> → high-stakes agentic/document work &nbsp;·&nbsp; <b>GPT-5.6 Luna</b> → high-volume, cost-sensitive tasks &nbsp;·&nbsp; <b>text-embedding-3-small</b> → retrieval/search &nbsp;·&nbsp; <b>GPT Image 2</b> → image generation &nbsp;·&nbsp; <b>gpt-realtime-2.1</b> → live voice agents &nbsp;·&nbsp; <b>gpt-4o-transcribe</b> → speech-to-text
+        </div>
+      </div>
+    </section>
+
+    <section class="roadmap">
+      <div class="wrap rv">
+        <span class="kicker">Portfolio Architecture</span>
+        <h2>Four Layers. One Portfolio.</h2>
+        <p class="lead">OpenAI folded standalone reasoning models into the flagship line in 2026. Understanding which layer — and which reasoning effort setting — fits your workload now matters more than knowing every model name.</p>
+        <div class="grid g5">
+          <div class="card">
+            <div class="layer-n">Layer 1</div>
+            <h3>Frontier General</h3>
+            <p>GPT-5.6 Sol — highest capability, adjustable reasoning effort (none → max), 1M+ token context, premium pricing.</p>
+          </div>
+          <div class="card">
+            <div class="layer-n">Layer 2</div>
+            <h3>Value Production</h3>
+            <p>GPT-5.6 Terra, GPT-5.6 Luna — high-volume defaults, fast, cost-efficient, same 1.05M context window as Sol.</p>
+          </div>
+          <div class="card">
+            <div class="layer-n">Layer 3</div>
+            <h3>Reasoning Effort (built-in)</h3>
+            <p>o3 and o4-mini were retired Feb 2026. Set <code>reasoning_effort</code> on any GPT-5.6 model instead of switching models.</p>
+          </div>
+          <div class="card">
+            <div class="layer-n">Layer 4</div>
+            <h3>Specialist Media</h3>
+            <p>GPT Image 2, Sora 2, gpt-realtime-2.1, gpt-4o-transcribe — modality-native models for image, video, voice, transcription.</p>
+          </div>
+          <div class="card">
+            <div class="layer-n">Layer 5</div>
+            <h3>Compatibility</h3>
+            <p>GPT-5.5, GPT-5.4 family — still fully priced and supported, useful for cost comparison, not recommended for new builds.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap rv">
+        <span class="kicker">Release Timeline</span>
+        <h2>Cadence Has Stayed Aggressive</h2>
+        <p class="lead">OpenAI has shipped a new flagship family roughly every one to two months since GPT-5's August 2025 launch.</p>
+        <div class="tl">
+          <div class="tl-item"><div class="dot"></div><div class="tl-card"><div class="tl-date">Aug 2025</div><div class="tl-name">GPT-5</div></div></div>
+          <div class="tl-item"><div class="dot"></div><div class="tl-card"><div class="tl-date">Nov 2025</div><div class="tl-name">GPT-5.1</div></div></div>
+          <div class="tl-item"><div class="dot"></div><div class="tl-card"><div class="tl-date">Dec 2025</div><div class="tl-name">GPT-5.2 &amp; GPT-5.2-Codex</div></div></div>
+          <div class="tl-item"><div class="dot"></div><div class="tl-card"><div class="tl-date">Feb 2026</div><div class="tl-name">GPT-5.3-Codex</div></div></div>
+          <div class="tl-item"><div class="dot"></div><div class="tl-card"><div class="tl-date">Feb 2026</div><div class="tl-name">o-series (o3, o4-mini) retired — folded into reasoning_effort</div></div></div>
+          <div class="tl-item"><div class="dot"></div><div class="tl-card"><div class="tl-date">Mar 2026</div><div class="tl-name">GPT-5.4</div></div></div>
+          <div class="tl-item"><div class="dot"></div><div class="tl-card"><div class="tl-date">Apr 2026</div><div class="tl-name">GPT-5.5 &amp; GPT Image 2</div></div></div>
+          <div class="tl-item"><div class="dot"></div><div class="tl-card"><div class="tl-date">Feb–Jul 2026</div><div class="tl-name">GPT-5.6 family (Sol, Terra, Luna)</div></div></div>
+          <div class="tl-item now"><div class="dot"></div><div class="tl-card"><div class="tl-date">30 Jul 2026</div><div class="tl-name">"Priority processing" renamed Fast mode</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="roadmap">
+      <div class="wrap rv">
+        <span class="kicker">Key Strategic Themes</span>
+        <h2>What Changed Since Cohort 10 (May 2026)</h2>
+        <div>
+          <div class="theme">
+            <div class="tnum">01</div>
+            <div><h3>Reasoning Effort Replaces Standalone Reasoning Models</h3><p>o3 and o4-mini are retired. Every GPT-5.6 model now accepts a <code>reasoning_effort</code> parameter (none, low, medium, high, xhigh, max) — one model line spans everyday chat and deep, multi-step reasoning.</p></div>
+          </div>
+          <div class="theme">
+            <div class="tnum">02</div>
+            <div><h3>1.05M Token Context Is Now the Default</h3><p>GPT-5.6 Sol, Terra, and Luna all ship with a 1.05M token context window out of the box — no separate "long context" model needed.</p></div>
+          </div>
+          <div class="theme">
+            <div class="tnum">03</div>
+            <div><h3>Four Pricing Tiers Per Model</h3><p>Standard, Batch, Flex, and the newly renamed Fast mode (formerly Priority processing, renamed 30 Jul 2026) each carry different multipliers — batch/flex run roughly half of standard, fast mode roughly double.</p></div>
+          </div>
+          <div class="theme">
+            <div class="tnum">04</div>
+            <div><h3>Regional Data Residency Carries a 10% Uplift</h3><p>Models released on or after 5 Mar 2026 that support regional processing endpoints are billed a 10% premium over standard pricing for data residency.</p></div>
+          </div>
+          <div class="theme">
+            <div class="tnum">05</div>
+            <div><h3>Modality-Native Models Still Win Their Domains</h3><p>Voice (gpt-realtime-2.1), image (GPT Image 2), video (Sora 2), and transcription (gpt-4o-transcribe, gpt-transcribe) remain dedicated specialist models — don't route audio or image work through general GPT endpoints.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ================= MODEL CARDS ================= -->
+  <div id="dds-c11-cards">
+    <section>
+      <div class="wrap rv">
+        <span class="kicker">Model Cards</span>
+        <h2>The Models Worth Knowing</h2>
+        <p class="lead">Not the full 70+ catalog — the models that actually show up in production builds.</p>
+        <div class="grid g3">
+
+          <div class="mcard">
+            <div class="mcard-top"><span class="mcard-name">gpt-5.6-sol</span><span class="mcard-tag rec">Recommended</span></div>
+            <p>Frontier model for complex reasoning, coding, and agentic tool use. 1.05M context, reasoning effort none→max.</p>
+            <div class="mcard-price"><span>In <b>$5.00</b>/1M</span><span>Out <b>$30.00</b>/1M</span></div>
+          </div>
+
+          <div class="mcard">
+            <div class="mcard-top"><span class="mcard-name">gpt-5.6-terra</span><span class="mcard-tag rec">Default</span></div>
+            <p>Balances intelligence and cost. Same 1.05M context and tool support as Sol, roughly 60% cheaper.</p>
+            <div class="mcard-price"><span>In <b>$2.00</b>/1M</span><span>Out <b>$12.00</b>/1M</span></div>
+          </div>
+
+          <div class="mcard">
+            <div class="mcard-top"><span class="mcard-name">gpt-5.6-luna</span><span class="mcard-tag">High-volume</span></div>
+            <p>Cost-sensitive, high-throughput workloads — classification, tagging, lightweight chat at scale.</p>
+            <div class="mcard-price"><span>In <b>$0.20</b>/1M</span><span>Out <b>$1.20</b>/1M</span></div>
+          </div>
+
+          <div class="mcard">
+            <div class="mcard-top"><span class="mcard-name">gpt-5.5 / gpt-5.4</span><span class="mcard-tag">Legacy</span></div>
+            <p>Still fully supported, priced comparably to GPT-5.6. No longer the default recommendation for new builds.</p>
+            <div class="mcard-price"><span>In <b>$2.50–5.00</b>/1M</span><span>Out <b>$15–30</b>/1M</span></div>
+          </div>
+
+          <div class="mcard">
+            <div class="mcard-top"><span class="mcard-name">gpt-image-2</span><span class="mcard-tag rec">Recommended</span></div>
+            <p>State-of-the-art image generation and editing. Text and image inputs, image output billed per token.</p>
+            <div class="mcard-price"><span>Image in <b>$8.00</b>/1M</span><span>Out <b>$30.00</b>/1M</span></div>
+          </div>
+
+          <div class="mcard">
+            <div class="mcard-top"><span class="mcard-name">sora-2 / sora-2-pro</span><span class="mcard-tag">Video</span></div>
+            <p>Text-to-video generation, billed per second of output. Pro adds 1024p and 1080p resolutions.</p>
+            <div class="mcard-price"><span>720p <b>$0.10–0.30</b>/sec</span></div>
+          </div>
+
+          <div class="mcard">
+            <div class="mcard-top"><span class="mcard-name">gpt-realtime-2.1</span><span class="mcard-tag rec">Recommended</span></div>
+            <p>Flagship voice model for live, low-latency audio-in/audio-out agents with tool use.</p>
+            <div class="mcard-price"><span>Audio in <b>$32.00</b>/1M</span><span>Out <b>$64.00</b>/1M</span></div>
+          </div>
+
+          <div class="mcard">
+            <div class="mcard-top"><span class="mcard-name">gpt-4o-transcribe</span><span class="mcard-tag rec">Recommended</span></div>
+            <p>High-accuracy speech-to-text for file and realtime transcription.</p>
+            <div class="mcard-price"><span>≈ <b>$0.006</b>/min</span></div>
+          </div>
+
+          <div class="mcard">
+            <div class="mcard-top"><span class="mcard-name">text-embedding-3-small</span><span class="mcard-tag rec">Recommended</span></div>
+            <p>Best cost/quality embedding model for retrieval, RAG, and search. 1,536 dimensions.</p>
+            <div class="mcard-price"><span>In <b>$0.02</b>/1M</span></div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= COMPARE TABLE ================= -->
+  <div id="dds-c11-compare">
+    <section class="roadmap">
+      <div class="wrap rv">
+        <span class="kicker">Flagship Models</span>
+        <h2>Text &amp; Reasoning — Standard Pricing</h2>
+        <p class="lead">Prices per 1M tokens, Standard tier, short context. Long-context requests run roughly 2× these rates on GPT-5.6/5.5/5.4.</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Input</th><th>Cached input</th><th>Output</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="model">gpt-5.6-sol</td><td>$5.00</td><td>$0.50</td><td>$30.00</td><td class="dim">Flagship — recommended</td></tr>
+              <tr><td class="model">gpt-5.6-terra</td><td>$2.00</td><td>$0.20</td><td>$12.00</td><td class="dim">Balanced — default</td></tr>
+              <tr><td class="model">gpt-5.6-luna</td><td>$0.20</td><td>$0.02</td><td>$1.20</td><td class="dim">High-volume</td></tr>
+              <tr><td class="model">gpt-5.5</td><td>$5.00</td><td>$0.50</td><td>$30.00</td><td class="dim">Legacy — still supported</td></tr>
+              <tr><td class="model">gpt-5.5-pro</td><td>$30.00</td><td>—</td><td>$180.00</td><td class="dim">Legacy pro tier</td></tr>
+              <tr><td class="model">gpt-5.4</td><td>$2.50</td><td>$0.25</td><td>$15.00</td><td class="dim">Legacy</td></tr>
+              <tr><td class="model">gpt-5.4-mini</td><td>$0.75</td><td>$0.075</td><td>$4.50</td><td class="dim">Legacy</td></tr>
+              <tr><td class="model">gpt-5.4-nano</td><td>$0.20</td><td>$0.02</td><td>$1.25</td><td class="dim">Legacy</td></tr>
+              <tr><td class="model">gpt-5.4-pro</td><td>$30.00</td><td>—</td><td>$180.00</td><td class="dim">Legacy pro tier</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="tbl-note">Batch tier ≈ 50% of Standard. Fast mode ≈ 2× Standard. Regional data-residency endpoints add a 10% uplift on eligible models (released ≥ 5 Mar 2026).</p>
+        <div class="change"><b>Changed from Cohort 10:</b> GPT-5.5 was the flagship recommendation in May. As of August 2026, GPT-5.6 (Sol/Terra/Luna) is the current flagship family.</div>
+
+        <div class="sub-h">Realtime &amp; Voice — per 1M tokens (or per minute where noted)</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Modality</th><th>Input</th><th>Cached input</th><th>Output</th></tr></thead>
+            <tbody>
+              <tr><td class="model">gpt-realtime-2.1</td><td>Audio</td><td>$32.00</td><td>$0.40</td><td>$64.00</td></tr>
+              <tr><td class="model dim">″</td><td>Text</td><td>$4.00</td><td>$0.40</td><td>$24.00</td></tr>
+              <tr><td class="model dim">″</td><td>Image</td><td>$5.00</td><td>$0.50</td><td>—</td></tr>
+              <tr><td class="model">gpt-realtime-2.1-mini</td><td>Audio</td><td>$10.00</td><td>$0.30</td><td>$20.00</td></tr>
+              <tr><td class="model dim">″</td><td>Text</td><td>$0.60</td><td>$0.06</td><td>$2.40</td></tr>
+              <tr><td class="model">gpt-realtime-translate</td><td>Audio</td><td colspan="2" class="dim">—</td><td>$0.034/min</td></tr>
+              <tr><td class="model">gpt-live-transcribe</td><td>Audio</td><td colspan="2" class="dim">—</td><td>$0.017/min</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-h">Image Generation — per 1M tokens</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Modality</th><th>Input</th><th>Cached input</th><th>Output</th></tr></thead>
+            <tbody>
+              <tr><td class="model">gpt-image-2</td><td>Image</td><td>$8.00</td><td>$2.00</td><td>$30.00</td></tr>
+              <tr><td class="model dim">″</td><td>Text</td><td>$5.00</td><td>$1.25</td><td>—</td></tr>
+              <tr><td class="model">gpt-image-1.5</td><td>Image</td><td>$8.00</td><td>$2.00</td><td>$32.00</td></tr>
+              <tr><td class="model">gpt-image-1-mini</td><td>Image</td><td>$2.50</td><td>$0.25</td><td>$8.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-h">Video Generation (Sora) — per second</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Size</th><th>Price / second</th></tr></thead>
+            <tbody>
+              <tr><td class="model">sora-2</td><td>720p</td><td>$0.10</td></tr>
+              <tr><td class="model">sora-2-pro</td><td>720p</td><td>$0.30</td></tr>
+              <tr><td class="model dim">″</td><td>1024p</td><td>$0.50</td></tr>
+              <tr><td class="model dim">″</td><td>1080p</td><td>$0.70</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-h">Transcription</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Estimated cost</th></tr></thead>
+            <tbody>
+              <tr><td class="model">gpt-transcribe</td><td>$0.0045 / minute</td></tr>
+              <tr><td class="model">gpt-live-transcribe</td><td>$0.017 / minute</td></tr>
+              <tr><td class="model">gpt-4o-transcribe</td><td>$0.006 / minute ($2.50 in / $10.00 out per 1M tokens)</td></tr>
+              <tr><td class="model">gpt-4o-mini-transcribe</td><td>$0.003 / minute ($1.25 in / $5.00 out per 1M tokens)</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-h">Embeddings</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Model</th><th>Price / 1M tokens</th><th>Dimensions</th><th>Best for</th></tr></thead>
+            <tbody>
+              <tr><td class="model">text-embedding-3-small</td><td>$0.02</td><td class="dim">1,536</td><td class="dim">Retrieval, RAG, search — best cost/quality</td></tr>
+              <tr><td class="model">text-embedding-3-large</td><td>$0.13</td><td class="dim">3,072</td><td class="dim">Max precision use cases</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sub-h">Built-in Tools</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Tool</th><th>Details</th><th>Pricing</th></tr></thead>
+            <tbody>
+              <tr><td class="model">Web search</td><td class="dim">All models</td><td>$10.00 / 1k calls + content tokens at model rates</td></tr>
+              <tr><td class="model dim">″</td><td class="dim">Non-reasoning preview</td><td>$25.00 / 1k calls, content tokens free</td></tr>
+              <tr><td class="model">Containers</td><td class="dim">Hosted Shell &amp; Code Interpreter</td><td>$0.03–$1.92 per 20-min session (1GB–64GB)</td></tr>
+              <tr><td class="model">File search</td><td class="dim">Storage</td><td>$0.10/GB/day (1GB free)</td></tr>
+              <tr><td class="model dim">″</td><td class="dim">Tool call</td><td>$2.50 / 1k calls</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= COST CALCULATOR ================= -->
+  <div id="dds-c11-calc">
+    <section>
+      <div class="wrap rv">
+        <span class="kicker"><span class="em">💰</span>Cost Estimator</span>
+        <h2>Estimate Your Production Spend</h2>
+        <p class="lead">Pick the models you want to compare, set the average input/output tokens and monthly interaction volume for each — since usage patterns differ by model — and see monthly cost side by side.</p>
+        <div class="calc">
+
+          <div class="presets">
+            <span class="presets-label">Quick presets — applies to all columns</span>
+            <div class="preset-row" id="dds-c11-presets">
+              <button type="button" class="preset-btn" data-preset="0"><span class="em">💬</span>Short Chat</button>
+              <button type="button" class="preset-btn" data-preset="1"><span class="em">📄</span>Long Generation</button>
+              <button type="button" class="preset-btn" data-preset="2"><span class="em">🤖</span>High-Volume Bot</button>
+              <button type="button" class="preset-btn" data-preset="3"><span class="em">🔬</span>Research Task</button>
+              <button type="button" class="preset-btn" data-preset="4"><span class="em">🏷️</span>Classification</button>
+            </div>
+          </div>
+
+          <!-- Static fallback: pre-rendered with the same defaults the script uses (GPT-5.6 Sol vs
+               GPT-5.6 Terra, 500 in / 1000 out / 10,000 interactions / 0% cached). If the page's JS
+               runs, script below immediately rebuilds this from the same data so nothing changes
+               visually — this exists purely so the calculator is never blank if JS is blocked. -->
+          <div class="cmp-wrap" id="dds-c11-cmp">
+            <div class="cmp-col">
+              <div class="cmp-col-head">
+                <select class="cmp-model" disabled>
+                  <option selected>GPT-5.6 Sol</option>
+                  <option>GPT-5.6 Terra</option>
+                  <option>GPT-5.6 Luna</option>
+                  <option>GPT-5.5</option>
+                  <option>GPT-5.5 Pro</option>
+                  <option>GPT-5.4</option>
+                  <option>GPT-5.4 mini</option>
+                  <option>GPT-5.4 nano</option>
+                  <option>GPT-5.4 Pro</option>
+                  <option>GPT Image 2 (image tokens)</option>
+                  <option>gpt-realtime-2.1 (audio)</option>
+                  <option>gpt-realtime-2.1-mini (audio)</option>
+                  <option>gpt-4o-transcribe</option>
+                  <option>text-embedding-3-small</option>
+                  <option>text-embedding-3-large</option>
+                </select>
+              </div>
+              <div class="field"><label>Avg input tokens / interaction</label><input type="number" value="500" disabled></div>
+              <div class="field"><label>Avg output tokens / interaction</label><input type="number" value="1000" disabled></div>
+              <div class="field"><label>Interactions / month</label><input type="number" value="10000" disabled></div>
+              <div class="field"><label>Cached input % (0–100)</label><input type="number" value="0" disabled></div>
+              <div class="cmp-result"><div class="cmp-cost">$325.00</div><div class="cmp-basis">5M in · 10M out / month</div></div>
+            </div>
+            <div class="cmp-col cheapest">
+              <div class="cmp-col-head">
+                <select class="cmp-model" disabled>
+                  <option>GPT-5.6 Sol</option>
+                  <option selected>GPT-5.6 Terra</option>
+                  <option>GPT-5.6 Luna</option>
+                  <option>GPT-5.5</option>
+                  <option>GPT-5.5 Pro</option>
+                  <option>GPT-5.4</option>
+                  <option>GPT-5.4 mini</option>
+                  <option>GPT-5.4 nano</option>
+                  <option>GPT-5.4 Pro</option>
+                  <option>GPT Image 2 (image tokens)</option>
+                  <option>gpt-realtime-2.1 (audio)</option>
+                  <option>gpt-realtime-2.1-mini (audio)</option>
+                  <option>gpt-4o-transcribe</option>
+                  <option>text-embedding-3-small</option>
+                  <option>text-embedding-3-large</option>
+                </select>
+              </div>
+              <div class="field"><label>Avg input tokens / interaction</label><input type="number" value="500" disabled></div>
+              <div class="field"><label>Avg output tokens / interaction</label><input type="number" value="1000" disabled></div>
+              <div class="field"><label>Interactions / month</label><input type="number" value="10000" disabled></div>
+              <div class="field"><label>Cached input % (0–100)</label><input type="number" value="0" disabled></div>
+              <div class="cmp-result"><div class="cmp-cost">$130.00</div><div class="cmp-basis">5M in · 10M out / month</div><div class="cmp-badge">Cheapest</div></div>
+            </div>
+          </div>
+          <button type="button" class="add-model-btn" id="dds-c11-add">+ Compare another model</button>
+
+          <p class="calc-note">Estimate only — excludes tool-call fees, long-context multipliers, and pricing-tier (Batch/Fast) discounts. Interaction totals are converted to millions of tokens internally before pricing. Always confirm against OpenAI's live pricing page before committing budget.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= TASK MAPPING ================= -->
+  <div id="dds-c11-tasks">
+    <section class="roadmap">
+      <div class="wrap rv">
+        <span class="kicker">Task Mapping</span>
+        <h2>What Should I Use For...</h2>
+        <p class="lead">The fastest way to pick a model: start from the task, not the model name.</p>
+        <div style="margin-top:30px">
+          <div class="tmap-row"><div class="task">Everyday chat, coding assistant, internal tools</div><div class="why">Best balance of quality and cost for daily-driver use</div><div class="rec">GPT-5.6 Terra</div></div>
+          <div class="tmap-row"><div class="task">Multi-step agentic workflows, long documents</div><div class="why">Needs the strongest reasoning + 1M+ context</div><div class="rec">GPT-5.6 Sol</div></div>
+          <div class="tmap-row"><div class="task">High-volume classification, tagging, summarization</div><div class="why">Cost matters more than peak reasoning</div><div class="rec">GPT-5.6 Luna</div></div>
+          <div class="tmap-row"><div class="task">Complex math, science, multi-step logic</div><div class="why">Set reasoning effort to high or xhigh</div><div class="rec">GPT-5.6 Sol (effort: high)</div></div>
+          <div class="tmap-row"><div class="task">RAG / semantic search / document retrieval</div><div class="why">Best cost-to-quality embedding model</div><div class="rec">text-embedding-3-small</div></div>
+          <div class="tmap-row"><div class="task">Image generation and editing</div><div class="why">Current state-of-the-art image model</div><div class="rec">GPT Image 2</div></div>
+          <div class="tmap-row"><div class="task">Short promo / social video clips</div><div class="why">Billed per second, 720p is enough for most social use</div><div class="rec">Sora 2</div></div>
+          <div class="tmap-row"><div class="task">Live voice agents (support, sales, tutoring)</div><div class="why">Purpose-built for low-latency audio in/out</div><div class="rec">gpt-realtime-2.1</div></div>
+          <div class="tmap-row"><div class="task">Transcribing recorded calls or workshops</div><div class="why">High accuracy, billed per minute</div><div class="rec">gpt-4o-transcribe</div></div>
+          <div class="tmap-row"><div class="task">Non-urgent, large overnight batch jobs</div><div class="why">Batch tier runs ≈50% of Standard pricing</div><div class="rec">Any model, Batch tier</div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= SELECTION GUIDE ================= -->
+  <div id="dds-c11-guide">
+    <section>
+      <div class="wrap rv">
+        <span class="kicker">Selection Guide</span>
+        <h2>How To Choose in Five Questions</h2>
+        <div style="margin-top:30px">
+          <div class="sg-step">
+            <div class="sg-q">1</div>
+            <div><h3>Is this a build/prototype or a production workload?</h3><p>Prototyping → default to <b>GPT-5.6 Terra</b> and iterate. Production at scale → model your monthly token volume with the calculator above before committing.</p></div>
+          </div>
+          <div class="sg-step">
+            <div class="sg-q">2</div>
+            <div><h3>Does the task need deep, multi-step reasoning?</h3><p>If yes, use <b>GPT-5.6 Sol</b> with <code>reasoning_effort</code> set to high or xhigh. If the task is straightforward (chat, drafting, simple Q&amp;A), leave effort at none or low — you're paying for reasoning tokens either way.</p></div>
+          </div>
+          <div class="sg-step">
+            <div class="sg-q">3</div>
+            <div><h3>Is the workload high-volume and cost-sensitive?</h3><p>Classification, tagging, and simple summarization at scale → <b>GPT-5.6 Luna</b>. For non-urgent batch jobs, stack the Batch tier discount (≈50% off) on top.</p></div>
+          </div>
+          <div class="sg-step">
+            <div class="sg-q">4</div>
+            <div><h3>Is the input non-text (voice, image, video)?</h3><p>Route to the modality-native specialist model — <b>gpt-realtime-2.1</b> for voice, <b>GPT Image 2</b> for images, <b>Sora 2</b> for video, <b>gpt-4o-transcribe</b> for transcription — never through a general chat model.</p></div>
+          </div>
+          <div class="sg-step">
+            <div class="sg-q">5</div>
+            <div><h3>Does latency matter more than cost right now?</h3><p>Use Fast mode (formerly Priority processing, renamed 30 Jul 2026) — roughly 2× Standard pricing for faster response times. Otherwise, Standard tier is the right default.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="foot">
+    <div class="wrap">
+      <p class="dds-mark" style="margin-bottom:8px">Decoding <span>Data Science</span></p>
+      <p>Prepared for Cohort 11 · AI Residency · Pricing as of 1 August 2026 · Source: OpenAI official docs &amp; pricing page</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var root = document.getElementById('dds-oai-c11');
+  if(!root) return;
+
+  // Scroll reveal — fail-open: elements are visible by default (see CSS). We only add
+  // .pre (hidden) right before setting up the observer, so a JS error anywhere below this
+  // block can never leave a section permanently invisible. A timeout also force-reveals
+  // anything the observer hasn't caught (e.g. full-page screenshot tools that don't scroll).
+  var rv = root.querySelectorAll('.rv');
+  if('IntersectionObserver' in window){
+    rv.forEach(function(el){ el.classList.add('pre'); });
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); e.target.classList.remove('pre'); io.unobserve(e.target); } });
+    }, {threshold:.12});
+    rv.forEach(function(el){ io.observe(el); });
+    setTimeout(function(){
+      rv.forEach(function(el){ el.classList.add('in'); el.classList.remove('pre'); });
+    }, 3000);
+  }
+
+  // Tab nav: smooth scroll + scrollspy — this is a JS ENHANCEMENT ONLY.
+  // Tabs are real <a href="#section-id"> links with CSS scroll-margin-top (see stylesheet),
+  // so navigation works via plain browser anchor jumping even if this whole block never runs
+  // (e.g. the host page strips/breaks inline scripts). We only intercept the click to make the
+  // jump smooth + precisely offset; any failure here is swallowed so the native jump still fires.
+  var tabs = Array.prototype.slice.call(root.querySelectorAll('.tab-btn'));
+  var sections = tabs.map(function(t){ return document.getElementById(t.getAttribute('data-target')); });
+  var navEl = root.querySelector('.tabnav');
+
+  tabs.forEach(function(btn, i){
+    btn.addEventListener('click', function(e){
+      try{
+        var target = sections[i];
+        if(!target) return; // let the native href jump handle it
+        e.preventDefault();
+        var navH = navEl ? navEl.offsetHeight : 0;
+        var y = target.getBoundingClientRect().top + window.pageYOffset - navH - 16;
+        if(y < 0) y = 0;
+        window.scrollTo({top:y, behavior:'smooth'});
+        history.replaceState ? history.replaceState(null, '', '#' + target.id) : (location.hash = target.id);
+      }catch(err){
+        // Swallow — the href="#id" default navigation already fired or will fire.
+      }
+    });
+  });
+
+  function setActive(idx){
+    tabs.forEach(function(t,i){ t.classList.toggle('active', i===idx); });
+  }
+  setActive(0);
+
+  if('IntersectionObserver' in window){
+    var navH2 = navEl ? navEl.offsetHeight : 0;
+    var spy = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var idx = sections.indexOf(entry.target);
+          if(idx > -1) setActive(idx);
+        }
+      });
+    }, {rootMargin: '-' + (navH2+10) + 'px 0px -70% 0px', threshold:0});
+    sections.forEach(function(s){ if(s) spy.observe(s); });
+  }
+
+  // Calculator — name, price/1M input (standard), price/1M cached input, price/1M output
+  // Cached price falls back to standard input price where OpenAI doesn't publish a separate cached rate.
+  // Note: OpenAI's current lineup has no "GPT-5.6 Pro" tier — only GPT-5.5 Pro and GPT-5.4 Pro are
+  // published Pro-tier prices, both included below alongside the GPT-5.6 family.
+  var MODELS = [
+    ['GPT-5.6 Sol',                     5.00, 0.50, 30.00],
+    ['GPT-5.6 Terra',                   2.00, 0.20, 12.00],
+    ['GPT-5.6 Luna',                    0.20, 0.02, 1.20],
+    ['GPT-5.5',                         5.00, 0.50, 30.00],
+    ['GPT-5.5 Pro',                     30.00, 30.00, 180.00],
+    ['GPT-5.4',                         2.50, 0.25, 15.00],
+    ['GPT-5.4 mini',                    0.75, 0.075, 4.50],
+    ['GPT-5.4 nano',                    0.20, 0.02, 1.25],
+    ['GPT-5.4 Pro',                     30.00, 30.00, 180.00],
+    ['GPT Image 2 (image tokens)',      8.00, 2.00, 30.00],
+    ['gpt-realtime-2.1 (audio)',        32.00, 0.40, 64.00],
+    ['gpt-realtime-2.1-mini (audio)',   10.00, 0.30, 20.00],
+    ['gpt-4o-transcribe',               2.50, 2.50, 10.00],
+    ['text-embedding-3-small',          0.02, 0.02, 0.00],
+    ['text-embedding-3-large',          0.13, 0.13, 0.00]
+  ];
+
+  var PRESETS = [
+    {label:'Short Chat', em:'💬', avgIn:300, avgOut:200, count:20000, cached:20},
+    {label:'Long Generation', em:'📄', avgIn:2000, avgOut:4000, count:2000, cached:10},
+    {label:'High-Volume Bot', em:'🤖', avgIn:200, avgOut:150, count:200000, cached:40},
+    {label:'Research Task', em:'🔬', avgIn:8000, avgOut:3000, count:500, cached:0},
+    {label:'Classification', em:'🏷️', avgIn:150, avgOut:20, count:500000, cached:50}
+  ];
+
+  var MAX_COLS = 4;
+  var state = [
+    {model:0, avgIn:500, avgOut:1000, count:10000, cached:0},
+    {model:1, avgIn:500, avgOut:1000, count:10000, cached:0}
+  ];
+
+  var cmpWrap = root.querySelector('#dds-c11-cmp');
+  var addBtn = root.querySelector('#dds-c11-add');
+  var presetRow = root.querySelector('#dds-c11-presets');
+  var presetBtns = [];
+
+  function fmt(n){
+    return '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+
+  function costFor(col){
+    var m = MODELS[col.model];
+    var cachedPct = Math.min(100, Math.max(0, col.cached || 0)) / 100;
+    var totalInM = ((col.avgIn || 0) * (col.count || 0)) / 1e6;
+    var totalOutM = ((col.avgOut || 0) * (col.count || 0)) / 1e6;
+    var cachedInM = totalInM * cachedPct;
+    var stdInM = totalInM * (1 - cachedPct);
+    return {
+      cost: (stdInM * m[1]) + (cachedInM * m[2]) + (totalOutM * m[3]),
+      totalInM: totalInM,
+      totalOutM: totalOutM
+    };
+  }
+
+  function paint(){
+    var cols = Array.prototype.slice.call(cmpWrap.querySelectorAll('.cmp-col'));
+    var costs = state.map(costFor);
+    var cheapestIdx = 0;
+    costs.forEach(function(c, i){ if(c.cost < costs[cheapestIdx].cost) cheapestIdx = i; });
+
+    cols.forEach(function(colEl, i){
+      var c = costs[i];
+      colEl.classList.toggle('cheapest', i === cheapestIdx && state.length > 1);
+      colEl.querySelector('.cmp-cost').textContent = fmt(c.cost);
+      colEl.querySelector('.cmp-basis').textContent =
+        (Math.round(c.totalInM * 100) / 100) + 'M in · ' + (Math.round(c.totalOutM * 100) / 100) + 'M out / month';
+      var badge = colEl.querySelector('.cmp-badge');
+      if(i === cheapestIdx && state.length > 1){
+        if(!badge){
+          badge = document.createElement('div');
+          badge.className = 'cmp-badge';
+          badge.textContent = 'Cheapest';
+          colEl.querySelector('.cmp-result').appendChild(badge);
+        }
+      } else if(badge){
+        badge.remove();
+      }
+    });
+  }
+
+  function render(){
+    cmpWrap.innerHTML = '';
+    state.forEach(function(col, i){
+      var el = document.createElement('div');
+      el.className = 'cmp-col';
+      el.innerHTML =
+        '<div class="cmp-col-head">' +
+          '<select class="cmp-model"></select>' +
+          (state.length > 1 ? '<button type="button" class="cmp-remove" title="Remove">✕</button>' : '') +
+        '</div>' +
+        '<div class="field"><label>Avg input tokens / interaction</label><input type="number" class="cmp-in" min="0" step="10" value="' + col.avgIn + '"></div>' +
+        '<div class="field"><label>Avg output tokens / interaction</label><input type="number" class="cmp-out" min="0" step="10" value="' + col.avgOut + '"></div>' +
+        '<div class="field"><label>Interactions / month</label><input type="number" class="cmp-count" min="0" step="100" value="' + col.count + '"></div>' +
+        '<div class="field"><label>Cached input % (0–100)</label><input type="number" class="cmp-cached" min="0" max="100" step="5" value="' + col.cached + '"></div>' +
+        '<div class="cmp-result"><div class="cmp-cost">$0.00</div><div class="cmp-basis"></div></div>';
+
+      var modelSel = el.querySelector('.cmp-model');
+      MODELS.forEach(function(m, mi){
+        var opt = document.createElement('option');
+        opt.value = mi;
+        opt.textContent = m[0];
+        modelSel.appendChild(opt);
+      });
+      modelSel.value = col.model;
+
+      modelSel.addEventListener('change', function(){ state[i].model = parseInt(modelSel.value, 10); paint(); });
+      el.querySelector('.cmp-in').addEventListener('input', function(e){ state[i].avgIn = parseFloat(e.target.value) || 0; clearPresetActive(); paint(); });
+      el.querySelector('.cmp-out').addEventListener('input', function(e){ state[i].avgOut = parseFloat(e.target.value) || 0; clearPresetActive(); paint(); });
+      el.querySelector('.cmp-count').addEventListener('input', function(e){ state[i].count = parseFloat(e.target.value) || 0; clearPresetActive(); paint(); });
+      el.querySelector('.cmp-cached').addEventListener('input', function(e){ state[i].cached = parseFloat(e.target.value) || 0; clearPresetActive(); paint(); });
+
+      var removeBtn = el.querySelector('.cmp-remove');
+      if(removeBtn){
+        removeBtn.addEventListener('click', function(){
+          state.splice(i, 1);
+          render();
+        });
+      }
+
+      cmpWrap.appendChild(el);
+    });
+
+    addBtn.disabled = state.length >= MAX_COLS;
+    paint();
+  }
+
+  function clearPresetActive(){
+    presetBtns.forEach(function(b){ b.classList.remove('active'); });
+  }
+
+  presetRow.innerHTML = ''; // wipe the static (inert) fallback buttons — JS below rebuilds them as interactive
+  PRESETS.forEach(function(p){
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'preset-btn';
+    btn.innerHTML = '<span class="em">' + p.em + '</span>' + p.label;
+    btn.addEventListener('click', function(){
+      state.forEach(function(col){
+        col.avgIn = p.avgIn; col.avgOut = p.avgOut; col.count = p.count; col.cached = p.cached;
+      });
+      render();
+      presetBtns.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+    });
+    presetRow.appendChild(btn);
+    presetBtns.push(btn);
+  });
+
+  addBtn.addEventListener('click', function(){
+    if(state.length >= MAX_COLS) return;
+    var nextModel = (state[state.length - 1].model + 1) % MODELS.length;
+    var last = state[state.length - 1];
+    state.push({model: nextModel, avgIn: last.avgIn, avgOut: last.avgOut, count: last.count, cached: last.cached});
+    render();
+  });
+
+  render();
+})();
+</script>
